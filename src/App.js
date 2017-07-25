@@ -7,6 +7,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      // TODO: hack until we find a better way to handle where savegame might be undefined
       savegame: ''
     };
 
@@ -26,9 +27,43 @@ class App extends Component {
           savegame={this.state.savegame}
           onNewSavegame={this.handleNewSavegame}
         />
+        <FileDownloader
+          savegame={this.state.savegame}
+        />
         <SavePropertiesList
           savegame={this.state.savegame}
         />
+      </div>
+    );
+  }
+}
+
+class FileDownloader extends Component {
+  constructor(props) {
+    super(props);
+
+    // Store URL in a variable so we can revoke it when we're done with it
+    // https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL#Notes
+    this.downloadURL = null;
+  }
+
+  createDownloadURL() {
+    // TODO: hack until we find a better way to handle where savegame might be undefined
+    if (this.props.savegame !== "") {
+      if (!isNullOrUndefined(this.downloadURL)) {
+        URL.revokeObjectURL(this.downloadURL);
+      }
+
+      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toFile('New.Civ5Save'));
+      return this.downloadURL;
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        {/* TODO: Hide the download link if a save file hasn't been loaded yet */}
+        <a href={this.createDownloadURL()} download="New.Civ5Save">Download</a>
       </div>
     );
   }
@@ -44,6 +79,10 @@ class FileUploader extends Component {
   async handleChange(event) {
     // TODO: handle if user clicks cancel instead of selecting a file
     let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
+
+    // TODO: testing
+    newSavegame.timeVictory = false;
+
     this.props.onNewSavegame(newSavegame);
   }
 
@@ -64,7 +103,7 @@ class SavePropertiesList extends Component {
           Game build: {this.props.savegame.gameBuild}
         </li>
         <li>
-          {/*TODO: Handle if this is undefined*/}
+          {/* TODO: Handle if this is undefined */}
           Game version: {String(this.props.savegame.gameVersion)}
         </li>
         <li>
@@ -120,3 +159,8 @@ class SavePropertiesList extends Component {
 }
 
 export default App;
+
+// https://stackoverflow.com/a/416327/399105
+function isNullOrUndefined(variable) {
+  return typeof variable === 'undefined' || variable === null;
+}

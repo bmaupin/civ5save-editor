@@ -1285,9 +1285,9 @@ circular-json@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
 
-civ5save@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.0.2.tgz#cd93c4a05dedcde6f7fd4443e0e079194ea45dbb"
+civ5save@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.0.5.tgz#428d6fbe0a38c5313c37379b552726757dc738a1"
 
 clap@^1.0.9:
   version "1.2.0"
