@@ -1,6 +1,17 @@
 import Civ5Save from 'civ5save';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Paper from 'material-ui/Paper';
 import React, { Component } from 'react';
 import './App.css';
+
+// Needed for onTouchTap
+// http://www.material-ui.com/#/get-started/installation
+injectTapEventPlugin();
 
 class App extends Component {
   constructor(props) {
@@ -22,18 +33,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <FileUploader
-          savegame={this.state.savegame}
-          onNewSavegame={this.handleNewSavegame}
-        />
-        <FileDownloader
-          savegame={this.state.savegame}
-        />
-        <SavePropertiesList
-          savegame={this.state.savegame}
-        />
-      </div>
+      <MuiThemeProvider className="App" muiTheme={getMuiTheme(darkBaseTheme)}>
+        <Paper>
+          <FileUploader
+            onNewSavegame={this.handleNewSavegame}
+          />
+          <FileDownloader
+            savegame={this.state.savegame}
+          />
+          <SavePropertiesList
+            savegame={this.state.savegame}
+          />
+        </Paper>
+      </MuiThemeProvider>
     );
   }
 }
@@ -60,11 +72,13 @@ class FileDownloader extends Component {
   }
 
   render() {
+    // TODO: Disable the download link if a save file hasn't been loaded yet
     return (
-      <div>
-        {/* TODO: Hide the download link if a save file hasn't been loaded yet */}
-        <a href={this.createDownloadURL()} download="New.Civ5Save">Download</a>
-      </div>
+      <FlatButton
+        href={this.createDownloadURL()} download="New.Civ5Save"
+        icon={<FontIcon className="material-icons">file_download</FontIcon>}
+        label="Download"
+      />
     );
   }
 }
@@ -74,23 +88,33 @@ class FileUploader extends Component {
     super(props);
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleTouchTap = this.handleTouchTap.bind(this);
   }
 
   async handleChange(event) {
-    // TODO: handle if user clicks cancel instead of selecting a file
-    let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
+    if (this.refs.fileUploader.files.length > 0) {
+      let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
 
-    // TODO: testing
-    newSavegame.timeVictory = false;
+      // TODO: testing
+      newSavegame.timeVictory = false;
 
-    this.props.onNewSavegame(newSavegame);
+      this.props.onNewSavegame(newSavegame);
+    }
+  }
+
+  handleTouchTap(event) {
+    this.refs.fileUploader.click();
   }
 
   render() {
     return (
-      <div>
-        <input type="file" ref="fileUploader" onChange={this.handleChange} />
-      </div>
+      <FlatButton
+        icon={<FontIcon className="material-icons">folder_open</FontIcon>}
+        label="Open"
+        onTouchTap={this.handleTouchTap}
+      >
+        <input type="file" ref="fileUploader" onChange={this.handleChange} style={{display: "none"}} />
+      </FlatButton>
     );
   }
 }
