@@ -1,11 +1,29 @@
 import Civ5Save from 'civ5save';
+import { createMuiTheme } from 'material-ui/styles';
+import createPalette from 'material-ui/styles/palette';
+import { createStyleSheet } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 import { MuiThemeProvider } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
 import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
 import './App.css';
+
+const darkTheme = createMuiTheme({
+  palette: createPalette({
+    type: 'dark',
+  }),
+});
+
+const styleSheet = createStyleSheet( () => ({
+  '@global': {
+    body: {
+      background: darkTheme.palette.background.default,
+      color: darkTheme.palette.text.primary,
+    }
+  }
+}));
 
 class App extends Component {
   constructor(props) {
@@ -27,7 +45,7 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider className="App">
+      <MuiThemeProvider className="App" theme={darkTheme}>
         <Grid container>
           <Grid item>
             <Grid
@@ -188,7 +206,7 @@ class SavePropertiesList extends Component {
   }
 }
 
-export default App;
+export default withStyles(styleSheet)(App);
 
 // https://stackoverflow.com/a/416327/399105
 function isNullOrUndefined(variable) {
