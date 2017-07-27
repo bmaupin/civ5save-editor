@@ -5,6 +5,7 @@ import { createStyleSheet } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
@@ -48,23 +49,22 @@ class App extends Component {
       <MuiThemeProvider className="App" theme={darkTheme}>
         <Grid container>
           <Grid item>
-            <Grid
-              align="flex-start"
-              container
-              direction="column"
-            >
+            <List style={{
+              backgroundColor: darkTheme.palette.background.paper,
+              height: '100vh'
+            }}>
               <FileUploader
                 onNewSavegame={this.handleNewSavegame}
               />
               <FileDownloader
                 savegame={this.state.savegame}
               />
-            </Grid>
+            </List>
           </Grid>
           <Grid item>
-              <SavePropertiesList
-                savegame={this.state.savegame}
-              />
+            <SavePropertiesList
+              savegame={this.state.savegame}
+            />
           </Grid>
         </Grid>
       </MuiThemeProvider>
@@ -96,13 +96,16 @@ class FileDownloader extends Component {
   render() {
     // TODO: Disable the download link if a save file hasn't been loaded yet
     return (
-      <Button
+      <ListItem button
+        component="a"
         download="New.Civ5Save"
         href={this.createDownloadURL()}
       >
-        <Icon>file_download</Icon>
-        Download
-      </Button>
+        <ListItemIcon>
+          <Icon>file_download</Icon>
+        </ListItemIcon>
+        <ListItemText primary="Download" />
+      </ListItem>
     );
   }
 }
@@ -132,13 +135,15 @@ class FileUploader extends Component {
 
   render() {
     return (
-      <Button
+      <ListItem button
         onClick={this.handleClick}
       >
-        <Icon>folder_open</Icon>
-        Open
+        <ListItemIcon>
+          <Icon>folder_open</Icon>
+        </ListItemIcon>
+        <ListItemText primary="Open" />
         <input type="file" ref="fileUploader" onChange={this.handleChange} style={{display: "none"}} />
-      </Button>
+      </ListItem>
     );
   }
 }
