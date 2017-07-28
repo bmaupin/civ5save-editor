@@ -2,14 +2,13 @@ import Checkbox from 'material-ui/Checkbox';
 import Civ5Save from 'civ5save';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
-import { createStyleSheet } from 'material-ui/styles';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
+import TextField from 'material-ui/TextField';
 import './App.css';
 
 const darkTheme = createMuiTheme({
@@ -17,15 +16,6 @@ const darkTheme = createMuiTheme({
     type: 'dark',
   }),
 });
-
-const styleSheet = createStyleSheet( () => ({
-  '@global': {
-    body: {
-      background: darkTheme.palette.background.default,
-      color: darkTheme.palette.text.primary,
-    }
-  }
-}));
 
 class App extends Component {
   constructor(props) {
@@ -47,13 +37,6 @@ class App extends Component {
   }
 
   handlePropertyChange(propertyName, newValue) {
-    console.log(propertyName, newValue);
-
-// this.setState((previousState) => {
-//   previousState.abc.xyz = 'blurg';
-//   return previousState;
-// });
-
     this.setState((previousState) => {
       previousState.savegame[propertyName] = newValue;
       return previousState;
@@ -63,10 +46,15 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider className="App" theme={darkTheme}>
-        <Grid container>
+        <Grid container
+          style={{
+            background: darkTheme.palette.background.default,
+            color: darkTheme.palette.text.primary,
+          }}>
           <Grid item>
             <List style={{
               backgroundColor: darkTheme.palette.background.paper,
+              // TODO: height is bigger than the viewable area
               height: '100vh'
             }}>
               <FileUploader
@@ -143,10 +131,6 @@ class FileUploader extends Component {
   async handleChange(event) {
     if (this.refs.fileUploader.files.length > 0) {
       let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
-
-      // TODO: testing
-      newSavegame.timeVictory = false;
-
       this.props.onNewSavegame(newSavegame);
     }
   }
@@ -216,85 +200,23 @@ class GeneralProperties extends Component {
 }
 
 class SavePropertiesList extends Component {
-      //   <List
-      //   dense={true}
-      //   style={{
-      //     backgroundColor: darkTheme.palette.background.contentFrame,
-      //   }}
-      // >
-      //   <ListItem>
-      //     Max turns: {this.props.savegame.maxTurns}
-      //   </ListItem>
-      //   <ListItem>
-      //     {/*TODO: Remove String() cast*/}
-      //     Time victory: {String(this.props.savegame.timeVictory)}
-      //   </ListItem>
-      //   <ListItem>
-      //     {/*TODO: Remove String() cast*/}
-      //     Science victory: {String(this.props.savegame.scienceVictory)}
-      //   </ListItem>
-      //   <ListItem>
-      //     {/*TODO: Remove String() cast*/}
-      //     Domination victory: {String(this.props.savegame.dominationVictory)}
-      //   </ListItem>
-      //   <ListItem>
-      //     {/*TODO: Remove String() cast*/}
-      //     Cultural victory: {String(this.props.savegame.culturalVictory)}
-      //   </ListItem>
-      //   <ListItem>
-      //     {/*TODO: Remove String() cast*/}
-      //     Diplomatic victory: {String(this.props.savegame.diplomaticVictory)}
-      //   </ListItem>
-      // </List>
-
-  // handleChange = name => (event, checked) => {
-  //   //this.setState({ [name]: checked });
-  //   this.props.savegame[name] = checked;
-  // };
-  /*
-  onChange={this.props.onPropertyChanged('timeVictory')}
-  onChange={this.props.onPropertyChanged('scienceVictory')}
-  */
-
   constructor(props) {
     super(props);
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
   }
 
   handleCheckboxClick(event) {
-    // console.log(event);
-    // console.log(event.target);
-
     this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  handleTextFieldChange(event) {
+    this.props.onPropertyChanged(event.target.name, event.target.value);
   }
 
   render() {
     return (
-      <div>
-      <List
-        dense={true}
-        style={{
-          backgroundColor: darkTheme.palette.background.contentFrame,
-        }}
-      >
-        <ListItem>
-          <Checkbox
-            checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.timeVictory)}
-            onClick={this.handleCheckboxClick}
-            value="timeVictory"
-          />
-          <ListItemText primary="Time victory" />
-        </ListItem>
-        <ListItem>
-          <Checkbox
-            checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.scienceVictory)}
-            onClick={this.handleCheckboxClick}
-            value="scienceVictory"
-          />
-          <ListItemText primary="Science victory" />
-        </ListItem>
-      </List>
       <FormGroup
         style={{
           backgroundColor: darkTheme.palette.background.contentFrame,
@@ -303,10 +225,37 @@ class SavePropertiesList extends Component {
           padding: '10px 20px',
         }}
       >
+        <TextField
+          label="Max turns"
+          name="maxTurns"
+          onChange={this.handleTextFieldChange}
+          type="number"
+          value={this.props.savegame.maxTurns}
+        />
         <FormControlLabel
           control={
             <Checkbox
-              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.dominationVictory)}
+              checked={possiblyUndefinedBool(this.props.savegame.timeVictory)}
+              onClick={this.handleCheckboxClick}
+              value="timeVictory"
+            />
+          }
+          label="Time victory"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={possiblyUndefinedBool(this.props.savegame.scienceVictory)}
+              onClick={this.handleCheckboxClick}
+              value="scienceVictory"
+            />
+          }
+          label="Science victory"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={possiblyUndefinedBool(this.props.savegame.dominationVictory)}
               onClick={this.handleCheckboxClick}
               value="dominationVictory"
             />
@@ -316,7 +265,8 @@ class SavePropertiesList extends Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.culturalVictory)}
+              checked={possiblyUndefinedBool(this.props.savegame.culturalVictory)}
+              onClick={this.handleCheckboxClick}
               value="culturalVictory"
             />
           }
@@ -325,22 +275,22 @@ class SavePropertiesList extends Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.diplomaticVictory)}
+              checked={possiblyUndefinedBool(this.props.savegame.diplomaticVictory)}
+              onClick={this.handleCheckboxClick}
               value="diplomaticVictory"
             />
           }
           label="Diplomatic victory"
         />
       </FormGroup>
-      </div>
     );
   }
 }
 
-export default withStyles(styleSheet)(App);
+export default App;
 
-function evalPossiblyNullOrUndefinedBool(variable) {
-  if (isNullOrUndefined(variable)) {
+function possiblyUndefinedBool(variable) {
+  if (typeof variable === 'undefined') {
     return false;
   } else {
     return variable;
