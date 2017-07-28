@@ -1,6 +1,5 @@
 body {
   font-family: 'Roboto', sans-serif;
-  /* TODO: the grid container adds extra gutter width; see if we can fix this more cleanly */
-  margin: 0 8px 0 0;
+  margin: 0;
   padding: 0;
 }
