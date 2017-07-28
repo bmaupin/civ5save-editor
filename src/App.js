@@ -48,6 +48,15 @@ class App extends Component {
     });
   }
 
+  showAfterSavegameLoaded() {
+    // TODO: fixme
+    if (this.state.savegame === '') {
+      return 'hidden';
+    } else {
+      return 'visible';
+    }
+  }
+
   render() {
     return (
       <MuiThemeProvider className="App" theme={darkTheme}>
@@ -92,12 +101,12 @@ class App extends Component {
                 />
               </List>
             </Grid>
-            <Grid item>
+            <Grid item style={{ visibility: this.showAfterSavegameLoaded() }}>
               <GeneralProperties
                 savegame={this.state.savegame}
               />
             </Grid>
-            <Grid item>
+            <Grid item style={{ visibility: this.showAfterSavegameLoaded() }}>
               <SavePropertiesList
                 onPropertyChanged={this.handlePropertyChange}
                 savegame={this.state.savegame}
