@@ -1,10 +1,11 @@
+import Checkbox from 'material-ui/Checkbox';
 import Civ5Save from 'civ5save';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import { createStyleSheet } from 'material-ui/styles';
+import { FormGroup, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import React, { Component } from 'react';
@@ -36,11 +37,26 @@ class App extends Component {
     };
 
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
+    this.handlePropertyChange = this.handlePropertyChange.bind(this);
   }
 
   handleNewSavegame(newSavegame) {
     this.setState({
       savegame: newSavegame
+    });
+  }
+
+  handlePropertyChange(propertyName, newValue) {
+    console.log(propertyName, newValue);
+
+// this.setState((previousState) => {
+//   previousState.abc.xyz = 'blurg';
+//   return previousState;
+// });
+
+    this.setState((previousState) => {
+      previousState.savegame[propertyName] = newValue;
+      return previousState;
     });
   }
 
@@ -62,7 +78,13 @@ class App extends Component {
             </List>
           </Grid>
           <Grid item>
+            <GeneralProperties
+              savegame={this.state.savegame}
+            />
+          </Grid>
+          <Grid item>
             <SavePropertiesList
+              onPropertyChanged={this.handlePropertyChange}
               savegame={this.state.savegame}
             />
           </Grid>
@@ -148,70 +170,182 @@ class FileUploader extends Component {
   }
 }
 
-class SavePropertiesList extends Component {
-  render() {
+class GeneralProperties extends Component {
+  render () {
     return (
-      <ul>
-        <li>
+      <List
+        dense={true}
+        style={{
+          fontSize: darkTheme.typography.fontSize,
+        }}
+      >
+        <ListItem>
           Game build: {this.props.savegame.gameBuild}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           {/* TODO: Handle if this is undefined */}
           Game version: {String(this.props.savegame.gameVersion)}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Current turn: {this.props.savegame.currentTurn}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Player 1 civilization: {this.props.savegame.player1Civilization}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Difficulty {this.props.savegame.difficulty}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Starting era: {this.props.savegame.startingEra}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Current era: {this.props.savegame.currentEra}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Game pace: {this.props.savegame.gamePace}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Map size: {this.props.savegame.mapSize}
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Map file: {this.props.savegame.mapFile}
-        </li>
-        <li>
-          Max turns: {this.props.savegame.maxTurns}
-        </li>
-        <li>
-          {/*TODO: Remove String() cast*/}
-          Time victory: {String(this.props.savegame.timeVictory)}
-        </li>
-        <li>
-          {/*TODO: Remove String() cast*/}
-          Science victory: {String(this.props.savegame.scienceVictory)}
-        </li>
-        <li>
-          {/*TODO: Remove String() cast*/}
-          Domination victory: {String(this.props.savegame.dominationVictory)}
-        </li>
-        <li>
-          {/*TODO: Remove String() cast*/}
-          Cultural victory: {String(this.props.savegame.culturalVictory)}
-        </li>
-        <li>
-          {/*TODO: Remove String() cast*/}
-          Diplomatic victory: {String(this.props.savegame.diplomaticVictory)}
-        </li>
-      </ul>
+        </ListItem>
+      </List>
+    );
+  }
+}
+
+class SavePropertiesList extends Component {
+      //   <List
+      //   dense={true}
+      //   style={{
+      //     backgroundColor: darkTheme.palette.background.contentFrame,
+      //   }}
+      // >
+      //   <ListItem>
+      //     Max turns: {this.props.savegame.maxTurns}
+      //   </ListItem>
+      //   <ListItem>
+      //     {/*TODO: Remove String() cast*/}
+      //     Time victory: {String(this.props.savegame.timeVictory)}
+      //   </ListItem>
+      //   <ListItem>
+      //     {/*TODO: Remove String() cast*/}
+      //     Science victory: {String(this.props.savegame.scienceVictory)}
+      //   </ListItem>
+      //   <ListItem>
+      //     {/*TODO: Remove String() cast*/}
+      //     Domination victory: {String(this.props.savegame.dominationVictory)}
+      //   </ListItem>
+      //   <ListItem>
+      //     {/*TODO: Remove String() cast*/}
+      //     Cultural victory: {String(this.props.savegame.culturalVictory)}
+      //   </ListItem>
+      //   <ListItem>
+      //     {/*TODO: Remove String() cast*/}
+      //     Diplomatic victory: {String(this.props.savegame.diplomaticVictory)}
+      //   </ListItem>
+      // </List>
+
+  // handleChange = name => (event, checked) => {
+  //   //this.setState({ [name]: checked });
+  //   this.props.savegame[name] = checked;
+  // };
+  /*
+  onChange={this.props.onPropertyChanged('timeVictory')}
+  onChange={this.props.onPropertyChanged('scienceVictory')}
+  */
+
+  constructor(props) {
+    super(props);
+
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+  }
+
+  handleCheckboxClick(event) {
+    // console.log(event);
+    // console.log(event.target);
+
+    this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  render() {
+    return (
+      <div>
+      <List
+        dense={true}
+        style={{
+          backgroundColor: darkTheme.palette.background.contentFrame,
+        }}
+      >
+        <ListItem>
+          <Checkbox
+            checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.timeVictory)}
+            onClick={this.handleCheckboxClick}
+            value="timeVictory"
+          />
+          <ListItemText primary="Time victory" />
+        </ListItem>
+        <ListItem>
+          <Checkbox
+            checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.scienceVictory)}
+            onClick={this.handleCheckboxClick}
+            value="scienceVictory"
+          />
+          <ListItemText primary="Science victory" />
+        </ListItem>
+      </List>
+      <FormGroup
+        style={{
+          backgroundColor: darkTheme.palette.background.contentFrame,
+          fontSize: darkTheme.typography.fontSize,
+          margin: '20px 0',
+          padding: '10px 20px',
+        }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.dominationVictory)}
+              onClick={this.handleCheckboxClick}
+              value="dominationVictory"
+            />
+          }
+          label="Domination victory"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.culturalVictory)}
+              value="culturalVictory"
+            />
+          }
+          label="Cultural victory"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={evalPossiblyNullOrUndefinedBool(this.props.savegame.diplomaticVictory)}
+              value="diplomaticVictory"
+            />
+          }
+          label="Diplomatic victory"
+        />
+      </FormGroup>
+      </div>
     );
   }
 }
 
 export default withStyles(styleSheet)(App);
+
+function evalPossiblyNullOrUndefinedBool(variable) {
+  if (isNullOrUndefined(variable)) {
+    return false;
+  } else {
+    return variable;
+  }
+}
 
 // https://stackoverflow.com/a/416327/399105
 function isNullOrUndefined(variable) {
