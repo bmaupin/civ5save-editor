@@ -48,12 +48,16 @@ class App extends Component {
     });
   }
 
-  showAfterSavegameLoaded() {
+  isSaveGameLoaded() {
     // TODO: fixme
-    if (this.state.savegame === '') {
-      return 'hidden';
-    } else {
+    return this.state.savegame !== '';
+  }
+
+  showAfterSavegameLoaded() {
+    if (this.isSaveGameLoaded()) {
       return 'visible';
+    } else {
+      return 'hidden';
     }
   }
 
@@ -97,6 +101,7 @@ class App extends Component {
                   onNewSavegame={this.handleNewSavegame}
                 />
                 <FileDownloader
+                  disabled={!this.isSaveGameLoaded()}
                   savegame={this.state.savegame}
                 />
               </List>
@@ -145,6 +150,7 @@ class FileDownloader extends Component {
     return (
       <ListItem button
         component="a"
+        disabled={this.props.disabled}
         download="New.Civ5Save"
         href={this.createDownloadURL()}
       >
