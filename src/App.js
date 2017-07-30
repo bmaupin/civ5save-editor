@@ -3,12 +3,14 @@ import Checkbox from 'material-ui/Checkbox';
 import Civ5Save from 'civ5save';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
+import createTypography from 'material-ui/styles/typography';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
+import Paper from 'material-ui/Paper';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import TextField from 'material-ui/TextField';
@@ -16,11 +18,21 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import './App.css';
 
-const darkTheme = createMuiTheme({
-  palette: createPalette({
+const darkTheme = (() => {
+  const palette = createPalette({
     type: 'dark',
-  }),
-});
+  });
+
+  // The default font for all Material UI elements is handled here. For everything else use CSS
+  const typography = createTypography(palette, {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  });
+
+  return createMuiTheme({
+    palette: palette,
+    typography: typography,
+  });
+})();
 
 class App extends Component {
   constructor(props) {
@@ -190,7 +202,7 @@ class FileUploader extends Component {
         <ListItemIcon>
           <Icon>folder_open</Icon>
         </ListItemIcon>
-        <ListItemText primary="Open" />
+        <ListItemText primary="Open Civ5Save" />
         <input type="file" ref="fileUploader" onChange={this.handleChange} style={{display: "none"}} />
       </ListItem>
     );
@@ -260,72 +272,80 @@ class SavePropertiesList extends Component {
 
   render() {
     return (
-      <FormGroup
+      <Paper
         style={{
-          backgroundColor: darkTheme.palette.background.contentFrame,
-          fontSize: darkTheme.typography.fontSize,
-          margin: '20px 0',
-          padding: '10px 20px',
+          // TODO
+          // backgroundColor: darkTheme.palette.background.contentFrame,
         }}
       >
-        <TextField
-          label="Max turns"
-          name="maxTurns"
-          onChange={this.handleTextFieldChange}
-          type="number"
-          value={this.props.savegame.maxTurns}
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={possiblyUndefinedBool(this.props.savegame.timeVictory)}
-              onClick={this.handleCheckboxClick}
-              value="timeVictory"
-            />
-          }
-          label="Time victory"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={possiblyUndefinedBool(this.props.savegame.scienceVictory)}
-              onClick={this.handleCheckboxClick}
-              value="scienceVictory"
-            />
-          }
-          label="Science victory"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={possiblyUndefinedBool(this.props.savegame.dominationVictory)}
-              onClick={this.handleCheckboxClick}
-              value="dominationVictory"
-            />
-          }
-          label="Domination victory"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={possiblyUndefinedBool(this.props.savegame.culturalVictory)}
-              onClick={this.handleCheckboxClick}
-              value="culturalVictory"
-            />
-          }
-          label="Cultural victory"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={possiblyUndefinedBool(this.props.savegame.diplomaticVictory)}
-              onClick={this.handleCheckboxClick}
-              value="diplomaticVictory"
-            />
-          }
-          label="Diplomatic victory"
-        />
-      </FormGroup>
+        <FormGroup
+          style={{
+            fontSize: darkTheme.typography.fontSize,
+            margin: '20px 0',
+            padding: '10px 20px',
+          }}
+        >
+          <TextField
+            // This fixes a bug where the label doesn't move out of the way before the value is changed
+            defaultValue="0"
+            label="Max turns"
+            name="maxTurns"
+            onChange={this.handleTextFieldChange}
+            type="number"
+            value={this.props.savegame.maxTurns}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={possiblyUndefinedBool(this.props.savegame.timeVictory)}
+                onClick={this.handleCheckboxClick}
+                value="timeVictory"
+              />
+            }
+            label="Time victory"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={possiblyUndefinedBool(this.props.savegame.scienceVictory)}
+                onClick={this.handleCheckboxClick}
+                value="scienceVictory"
+              />
+            }
+            label="Science victory"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={possiblyUndefinedBool(this.props.savegame.dominationVictory)}
+                onClick={this.handleCheckboxClick}
+                value="dominationVictory"
+              />
+            }
+            label="Domination victory"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={possiblyUndefinedBool(this.props.savegame.culturalVictory)}
+                onClick={this.handleCheckboxClick}
+                value="culturalVictory"
+              />
+            }
+            label="Cultural victory"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={possiblyUndefinedBool(this.props.savegame.diplomaticVictory)}
+                onClick={this.handleCheckboxClick}
+                value="diplomaticVictory"
+              />
+            }
+            label="Diplomatic victory"
+          />
+        </FormGroup>
+      </Paper>
     );
   }
 }
