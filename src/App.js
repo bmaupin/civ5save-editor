@@ -44,8 +44,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      // TODO: hack until we find a better way to handle where savegame might be undefined
-      savegame: ''
+      savegame: null
     };
 
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
@@ -66,8 +65,7 @@ class App extends Component {
   }
 
   isSaveGameLoaded() {
-    // TODO: fixme
-    return this.state.savegame !== '';
+    return !isNullOrUndefined(this.state.savegame);
   }
 
   showAfterSavegameLoaded() {
@@ -151,8 +149,7 @@ class FileDownloader extends Component {
   }
 
   createDownloadURL() {
-    // TODO: hack until we find a better way to handle where savegame might be undefined
-    if (this.props.savegame !== "") {
+    if (!isNullOrUndefined(this.props.savegame)) {
       if (!isNullOrUndefined(this.downloadURL)) {
         URL.revokeObjectURL(this.downloadURL);
       }
@@ -163,7 +160,6 @@ class FileDownloader extends Component {
   }
 
   render() {
-    // TODO: Disable the download link if a save file hasn't been loaded yet
     return (
       <ListItem button
         component="a"
@@ -224,35 +220,35 @@ class GeneralProperties extends Component {
         }}
       >
         <ListItem>
-          Game build: {this.props.savegame.gameBuild}
+          Game build: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gameBuild}
         </ListItem>
         <ListItem>
-          {/* TODO: Handle if this is undefined */}
-          Game version: {String(this.props.savegame.gameVersion)}
+          {/* TODO: Hide this if it's undefined */}
+          Game version: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gameVersion}
         </ListItem>
         <ListItem>
-          Current turn: {this.props.savegame.currentTurn}
+          Current turn: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.currentTurn}
         </ListItem>
         <ListItem>
-          Player 1 civilization: {this.props.savegame.player1Civilization}
+          Player 1 civilization: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.player1Civilization}
         </ListItem>
         <ListItem>
-          Difficulty {this.props.savegame.difficulty}
+          Difficulty: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.difficulty}
         </ListItem>
         <ListItem>
-          Starting era: {this.props.savegame.startingEra}
+          Starting era: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.startingEra}
         </ListItem>
         <ListItem>
-          Current era: {this.props.savegame.currentEra}
+          Current era: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.currentEra}
         </ListItem>
         <ListItem>
-          Game pace: {this.props.savegame.gamePace}
+          Game pace: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gamePace}
         </ListItem>
         <ListItem>
-          Map size: {this.props.savegame.mapSize}
+          Map size: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.mapSize}
         </ListItem>
         <ListItem>
-          Map file: {this.props.savegame.mapFile}
+          Map file: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.mapFile}
         </ListItem>
       </List>
     );
@@ -297,12 +293,12 @@ class SavePropertiesList extends Component {
             name="maxTurns"
             onChange={this.handleTextFieldChange}
             type="number"
-            value={this.props.savegame.maxTurns}
+            value={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.maxTurns}
           />
           <FormControlLabel
             control={
               <Checkbox
-                checked={possiblyUndefinedBool(this.props.savegame.timeVictory)}
+                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.timeVictory}
                 onClick={this.handleCheckboxClick}
                 value="timeVictory"
               />
@@ -312,7 +308,7 @@ class SavePropertiesList extends Component {
           <FormControlLabel
             control={
               <Checkbox
-                checked={possiblyUndefinedBool(this.props.savegame.scienceVictory)}
+                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.scienceVictory}
                 onClick={this.handleCheckboxClick}
                 value="scienceVictory"
               />
@@ -322,7 +318,7 @@ class SavePropertiesList extends Component {
           <FormControlLabel
             control={
               <Checkbox
-                checked={possiblyUndefinedBool(this.props.savegame.dominationVictory)}
+                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.dominationVictory}
                 onClick={this.handleCheckboxClick}
                 value="dominationVictory"
               />
@@ -332,7 +328,7 @@ class SavePropertiesList extends Component {
           <FormControlLabel
             control={
               <Checkbox
-                checked={possiblyUndefinedBool(this.props.savegame.culturalVictory)}
+                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.culturalVictory}
                 onClick={this.handleCheckboxClick}
                 value="culturalVictory"
               />
@@ -342,7 +338,7 @@ class SavePropertiesList extends Component {
           <FormControlLabel
             control={
               <Checkbox
-                checked={possiblyUndefinedBool(this.props.savegame.diplomaticVictory)}
+                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.diplomaticVictory}
                 onClick={this.handleCheckboxClick}
                 value="diplomaticVictory"
               />
@@ -356,14 +352,6 @@ class SavePropertiesList extends Component {
 }
 
 export default App;
-
-function possiblyUndefinedBool(variable) {
-  if (typeof variable === 'undefined') {
-    return false;
-  } else {
-    return variable;
-  }
-}
 
 // https://stackoverflow.com/a/416327/399105
 function isNullOrUndefined(variable) {

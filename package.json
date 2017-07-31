@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "civ5save": "^0.0.5",
+    "civ5save": "^0.0.6",
     "material-ui": "next",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
