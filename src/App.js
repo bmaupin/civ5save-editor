@@ -25,8 +25,13 @@ const darkTheme = (() => {
 
   // The default font for all Material UI elements is handled here. For everything else use CSS
   const typography = createTypography(palette, {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Tw Cen W01 Medium", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontSize: 'initial',
   });
+
+  // Nested properties can be defined in createTypography()
+  typography.subheading.fontSize = '1.17em';
+  typography.title.fontSize = '1.5em';
 
   return createMuiTheme({
     palette: palette,
