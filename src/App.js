@@ -49,6 +49,8 @@ class App extends Component {
 
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
+    this.isSavegameLoaded = this.isSavegameLoaded.bind(this);
+    this.isSavegamePropertyDefined = this.isSavegamePropertyDefined.bind(this);
   }
 
   handleNewSavegame(newSavegame) {
@@ -64,16 +66,12 @@ class App extends Component {
     });
   }
 
-  isSaveGameLoaded() {
+  isSavegameLoaded() {
     return !isNullOrUndefined(this.state.savegame);
   }
 
-  showAfterSavegameLoaded() {
-    if (this.isSaveGameLoaded()) {
-      return 'visible';
-    } else {
-      return 'hidden';
-    }
+  isSavegamePropertyDefined(propertyName) {
+    return !isNullOrUndefined(this.state) && !isNullOrUndefined(this.state.savegame) && typeof this.state.savegame[propertyName] !== 'undefined';
   }
 
   render() {
@@ -116,22 +114,28 @@ class App extends Component {
                   onNewSavegame={this.handleNewSavegame}
                 />
                 <FileDownloader
-                  disabled={!this.isSaveGameLoaded()}
+                  disabled={!this.isSavegameLoaded()}
                   savegame={this.state.savegame}
                 />
               </List>
             </Grid>
-            <Grid item style={{ visibility: this.showAfterSavegameLoaded() }}>
-              <GeneralProperties
-                savegame={this.state.savegame}
-              />
-            </Grid>
-            <Grid item style={{ visibility: this.showAfterSavegameLoaded() }}>
-              <SavePropertiesList
-                onPropertyChanged={this.handlePropertyChange}
-                savegame={this.state.savegame}
-              />
-            </Grid>
+            {this.isSavegameLoaded() &&
+              <Grid item>
+                <GeneralProperties
+                  isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                  savegame={this.state.savegame}
+                />
+              </Grid>
+            }
+            {this.isSavegameLoaded() &&
+              <Grid item>
+                <SavePropertiesList
+                  isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                  onPropertyChanged={this.handlePropertyChange}
+                  savegame={this.state.savegame}
+                />
+              </Grid>
+            }
           </Grid>
         </div>
       </MuiThemeProvider>
@@ -220,35 +224,36 @@ class GeneralProperties extends Component {
         }}
       >
         <ListItem>
-          Game build: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gameBuild}
+          Game build: {this.props.savegame.gameBuild}
+        </ListItem>
+        {this.props.isSavegamePropertyDefined('gameVersion') &&
+          <ListItem>
+            Game version: {this.props.savegame.gameVersion}
+          </ListItem>
+        }
+        <ListItem>
+          Current turn: {this.props.savegame.currentTurn}
         </ListItem>
         <ListItem>
-          {/* TODO: Hide this if it's undefined */}
-          Game version: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gameVersion}
+          Player 1 civilization: {this.props.savegame.player1Civilization}
         </ListItem>
         <ListItem>
-          Current turn: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.currentTurn}
+          Difficulty: {this.props.savegame.difficulty}
         </ListItem>
         <ListItem>
-          Player 1 civilization: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.player1Civilization}
+          Starting era: {this.props.savegame.startingEra}
         </ListItem>
         <ListItem>
-          Difficulty: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.difficulty}
+          Current era: {this.props.savegame.currentEra}
         </ListItem>
         <ListItem>
-          Starting era: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.startingEra}
+          Game pace: {this.props.savegame.gamePace}
         </ListItem>
         <ListItem>
-          Current era: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.currentEra}
+          Map size: {this.props.savegame.mapSize}
         </ListItem>
         <ListItem>
-          Game pace: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.gamePace}
-        </ListItem>
-        <ListItem>
-          Map size: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.mapSize}
-        </ListItem>
-        <ListItem>
-          Map file: {isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.mapFile}
+          Map file: {this.props.savegame.mapFile}
         </ListItem>
       </List>
     );
@@ -286,65 +291,75 @@ class SavePropertiesList extends Component {
             padding: '10px 20px',
           }}
         >
-          <TextField
-            // This fixes a bug where the label doesn't move out of the way before the value is changed
-            defaultValue="0"
-            label="Max turns"
-            name="maxTurns"
-            onChange={this.handleTextFieldChange}
-            type="number"
-            value={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.maxTurns}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.timeVictory}
-                onClick={this.handleCheckboxClick}
-                value="timeVictory"
-              />
-            }
-            label="Time victory"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.scienceVictory}
-                onClick={this.handleCheckboxClick}
-                value="scienceVictory"
-              />
-            }
-            label="Science victory"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.dominationVictory}
-                onClick={this.handleCheckboxClick}
-                value="dominationVictory"
-              />
-            }
-            label="Domination victory"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.culturalVictory}
-                onClick={this.handleCheckboxClick}
-                value="culturalVictory"
-              />
-            }
-            label="Cultural victory"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNullOrUndefined(this.props.savegame) ? "" : this.props.savegame.diplomaticVictory}
-                onClick={this.handleCheckboxClick}
-                value="diplomaticVictory"
-              />
-            }
-            label="Diplomatic victory"
-          />
+          {this.props.isSavegamePropertyDefined('maxTurns') &&
+            <TextField
+              label="Max turns"
+              name="maxTurns"
+              onChange={this.handleTextFieldChange}
+              type="number"
+              value={this.props.savegame.maxTurns}
+            />
+          }
+          {this.props.isSavegamePropertyDefined('timeVictory') &&
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.props.savegame.timeVictory}
+                  onClick={this.handleCheckboxClick}
+                  value="timeVictory"
+                />
+              }
+              label="Time victory"
+            />
+          }
+          {this.props.isSavegamePropertyDefined('scienceVictory') &&
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.props.savegame.scienceVictory}
+                  onClick={this.handleCheckboxClick}
+                  value="scienceVictory"
+                />
+              }
+              label="Science victory"
+            />
+          }
+          {this.props.isSavegamePropertyDefined('dominationVictory') &&
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.props.savegame.dominationVictory}
+                  onClick={this.handleCheckboxClick}
+                  value="dominationVictory"
+                />
+              }
+              label="Domination victory"
+            />
+          }
+          {this.props.isSavegamePropertyDefined('culturalVictory') &&
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.props.savegame.culturalVictory}
+                  onClick={this.handleCheckboxClick}
+                  value="culturalVictory"
+                />
+              }
+              label="Cultural victory"
+            />
+          }
+          {this.props.isSavegamePropertyDefined('diplomaticVictory') &&
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.props.savegame.diplomaticVictory}
+                  onClick={this.handleCheckboxClick}
+                  value="diplomaticVictory"
+                />
+              }
+              label="Diplomatic victory"
+            />
+          }
         </FormGroup>
       </Paper>
     );
