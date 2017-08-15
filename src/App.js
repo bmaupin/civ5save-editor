@@ -237,41 +237,41 @@ class ReadOnlyProperties extends Component {
         }}
       >
         <ListItem>
-          Game build: {this.props.savegame.gameBuild}
+          <CustomListItemText text={`Game build: ${this.props.savegame.gameBuild}`} />
         </ListItem>
         {this.props.isSavegamePropertyDefined('gameVersion') &&
           <ListItem>
-            Game version: {this.props.savegame.gameVersion}
+            <CustomListItemText text={`Game version: ${this.props.savegame.gameVersion}`} />
           </ListItem>
         }
         {this.props.isSavegamePropertyDefined('gameMode') &&
           <ListItem>
-            Game mode: {this.props.savegame.gameMode}
+            <CustomListItemText text={`Game mode: ${this.props.savegame.gameMode}`} />
           </ListItem>
         }
         <ListItem>
-          Current turn: {this.props.savegame.currentTurn}
+          <CustomListItemText text={`Current turn: ${this.props.savegame.currentTurn}`} />
         </ListItem>
         <ListItem>
-          Player 1 civilization: {this.props.savegame.player1Civilization}
+          <CustomListItemText text={`Player 1 civilization: ${this.props.savegame.player1Civilization}`} />
         </ListItem>
         <ListItem>
-          Difficulty: {this.props.savegame.difficulty}
+          <CustomListItemText text={`Difficulty: ${this.props.savegame.difficulty}`} />
         </ListItem>
         <ListItem>
-          Starting era: {this.props.savegame.startingEra}
+          <CustomListItemText text={`Starting era: ${this.props.savegame.startingEra}`} />
         </ListItem>
         <ListItem>
-          Current era: {this.props.savegame.currentEra}
+          <CustomListItemText text={`Current era: ${this.props.savegame.currentEra}`} />
         </ListItem>
         <ListItem>
-          Game pace: {this.props.savegame.gamePace}
+          <CustomListItemText text={`Game pace: ${this.props.savegame.gamePace}`} />
         </ListItem>
         <ListItem>
-          Map size: {this.props.savegame.mapSize}
+          <CustomListItemText text={`Map size: ${this.props.savegame.mapSize}`} />
         </ListItem>
         <ListItem>
-          Map: {this.props.savegame.mapFile}
+          <CustomListItemText text={`Map: ${this.props.savegame.mapFile}`} />
         </ListItem>
       </List>
     );
@@ -381,6 +381,21 @@ class VictoryTypes extends Component {
         </FormGroup>
       </Paper>
     );
+  }
+}
+
+class CustomListItemText extends Component {
+  render() {
+    return (
+      <ListItemText
+        disableTypography={true}
+        primary={this.props.text}
+        style={{
+          fontFamily: darkTheme.typography.fontFamily,
+          fontSize: darkTheme.typography.fontSize,
+        }}
+      />
+    )
   }
 }
 

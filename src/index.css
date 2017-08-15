@@ -1,6 +1,4 @@
 body {
-  /* TODO: Switching to ListItemText inside ListItem elements will remove the need for this */
-  font-family: "Tw Cen W01 Medium", "Roboto", "Helvetica", "Arial", sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
