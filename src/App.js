@@ -76,9 +76,18 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider className="App" theme={darkTheme}>
-        <div>
-          <AppBar position="static">
+      <MuiThemeProvider className="App" theme={darkTheme}
+        style={{
+          height: '100%',
+        }}>
+        <div style={{
+          height: '100%',
+        }}>
+          <AppBar
+             style={{
+              // Make sure app bar doesn't cover up page content
+              position: 'relative',
+            }}>
             <Toolbar>
               <Typography type="title"
                 // This makes sure the button is aligned on the right
@@ -95,20 +104,24 @@ class App extends Component {
             </Toolbar>
           </AppBar>
           <Grid container
-            // Without this, padding is added to every grid item
-            gutter={0}
             style={{
               background: darkTheme.palette.background.default,
               color: darkTheme.palette.text.primary,
-              // Fixes excess height and app bar drop shadow
-              position: "fixed",
-              // Fixes app bar drop shadow (together with position=fixed)
-              zIndex: "-1",
+              // Fix grid gutter adding horizontal scrollbar
+              margin: 0,
+              // TODO: we've subtracted the appbar height to prevent overflow. Is there a more elegant way to do this?
+              minHeight: 'calc(100% - 64px)',
+              width: '100%',
             }}>
-            <Grid item>
+            <Grid item
+              style={{
+                padding: 0,
+              }}>
               <List style={{
                 backgroundColor: darkTheme.palette.background.paper,
-                height: '100vh'
+                // TODO: we've subtracted the padding height to prevent overflow. Is there a more elegant way to do this?
+                height: 'calc(100% - 8px)',
+                padding: '8px 0 0',
               }}>
                 <FileUploader
                   onNewSavegame={this.handleNewSavegame}
@@ -121,7 +134,7 @@ class App extends Component {
             </Grid>
             {this.isSavegameLoaded() &&
               <Grid item>
-                <GeneralProperties
+                <ReadOnlyProperties
                   isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                   savegame={this.state.savegame}
                 />
@@ -129,7 +142,7 @@ class App extends Component {
             }
             {this.isSavegameLoaded() &&
               <Grid item>
-                <SavePropertiesList
+                <VictoryTypes
                   isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                   onPropertyChanged={this.handlePropertyChange}
                   savegame={this.state.savegame}
@@ -214,7 +227,7 @@ class FileUploader extends Component {
   }
 }
 
-class GeneralProperties extends Component {
+class ReadOnlyProperties extends Component {
   render () {
     return (
       <List
@@ -229,6 +242,11 @@ class GeneralProperties extends Component {
         {this.props.isSavegamePropertyDefined('gameVersion') &&
           <ListItem>
             Game version: {this.props.savegame.gameVersion}
+          </ListItem>
+        }
+        {this.props.isSavegamePropertyDefined('gameMode') &&
+          <ListItem>
+            Game mode: {this.props.savegame.gameMode}
           </ListItem>
         }
         <ListItem>
@@ -253,14 +271,14 @@ class GeneralProperties extends Component {
           Map size: {this.props.savegame.mapSize}
         </ListItem>
         <ListItem>
-          Map file: {this.props.savegame.mapFile}
+          Map: {this.props.savegame.mapFile}
         </ListItem>
       </List>
     );
   }
 }
 
-class SavePropertiesList extends Component {
+class VictoryTypes extends Component {
   constructor(props) {
     super(props);
 
@@ -281,7 +299,7 @@ class SavePropertiesList extends Component {
       <Paper
         style={{
           // TODO
-          // backgroundColor: darkTheme.palette.background.contentFrame,
+          backgroundColor: darkTheme.palette.background.contentFrame,
         }}
       >
         <FormGroup
