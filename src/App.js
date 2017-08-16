@@ -30,6 +30,7 @@ const darkTheme = (() => {
   });
 
   // Nested properties can be defined in createTypography()
+  typography.body1.fontSize = 'initial';
   typography.subheading.fontSize = '1.17em';
   typography.title.fontSize = '1.5em';
 
@@ -107,6 +108,8 @@ class App extends Component {
             style={{
               background: darkTheme.palette.background.default,
               color: darkTheme.palette.text.primary,
+              // Don't vertically shrink the sidebar to make room for content
+              flexWrap: 'nowrap',
               // Fix grid gutter adding horizontal scrollbar
               margin: 0,
               // TODO: we've subtracted the appbar height to prevent overflow. Is there a more elegant way to do this?
@@ -133,14 +136,20 @@ class App extends Component {
               </List>
             </Grid>
             {this.isSavegameLoaded() &&
-              <Grid item>
-                <ReadOnlyProperties
+              <Grid item
+                style={{
+                  // Make sure content shrinks if there isn't enough space for it
+                  flexShrink: '1',
+                  // TODO: adjust this as necessary
+                  maxWidth: '1000px',
+                }}>
+                <ReadOnlyPropertiesList
                   isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                   savegame={this.state.savegame}
                 />
               </Grid>
             }
-            {this.isSavegameLoaded() &&
+            {/*this.isSavegameLoaded() &&
               <Grid item>
                 <VictoryTypes
                   isSavegamePropertyDefined={this.isSavegamePropertyDefined}
@@ -148,7 +157,7 @@ class App extends Component {
                   savegame={this.state.savegame}
                 />
               </Grid>
-            }
+            */}
           </Grid>
         </div>
       </MuiThemeProvider>
@@ -227,53 +236,44 @@ class FileUploader extends Component {
   }
 }
 
-class ReadOnlyProperties extends Component {
+class ReadOnlyPropertiesList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.readOnlyProperties = {
+      'gameBuild': 'Game build',
+      'gameVersion': 'Game version',
+      'gameMode': 'Game mode',
+      'currentTurn': 'Current turn',
+      'player1Civilization': 'Player 1 civilization',
+      'difficulty': 'Difficulty',
+      'startingEra': 'Starting era',
+      'currentEra': 'Current era',
+      'gamePace': 'Game pace',
+      'mapSize': 'Map size',
+      'mapFile': 'Map',
+    }
+  }
+
   render () {
     return (
-      <List
-        dense={true}
+      <Grid container
         style={{
-          fontSize: darkTheme.typography.fontSize,
+          padding: '16px',
         }}
       >
-        <ListItem>
-          <CustomListItemText text={`Game build: ${this.props.savegame.gameBuild}`} />
-        </ListItem>
-        {this.props.isSavegamePropertyDefined('gameVersion') &&
-          <ListItem>
-            <CustomListItemText text={`Game version: ${this.props.savegame.gameVersion}`} />
-          </ListItem>
+        {Object.keys(this.readOnlyProperties).map(propertyName =>
+          this.props.isSavegamePropertyDefined(propertyName) &&
+            <Grid item xs={3}>
+              <Typography type='body1'>{this.readOnlyProperties[propertyName]}: <em>{this.props.savegame[propertyName]}</em></Typography>
+            </Grid>
+        )}
+        {this.props.isSavegamePropertyDefined('enabledDLC') &&
+          <Grid item xs={12}>
+            <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ')}</em></Typography>
+          </Grid>
         }
-        {this.props.isSavegamePropertyDefined('gameMode') &&
-          <ListItem>
-            <CustomListItemText text={`Game mode: ${this.props.savegame.gameMode}`} />
-          </ListItem>
-        }
-        <ListItem>
-          <CustomListItemText text={`Current turn: ${this.props.savegame.currentTurn}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Player 1 civilization: ${this.props.savegame.player1Civilization}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Difficulty: ${this.props.savegame.difficulty}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Starting era: ${this.props.savegame.startingEra}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Current era: ${this.props.savegame.currentEra}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Game pace: ${this.props.savegame.gamePace}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Map size: ${this.props.savegame.mapSize}`} />
-        </ListItem>
-        <ListItem>
-          <CustomListItemText text={`Map: ${this.props.savegame.mapFile}`} />
-        </ListItem>
-      </List>
+      </Grid>
     );
   }
 }
@@ -381,21 +381,6 @@ class VictoryTypes extends Component {
         </FormGroup>
       </Paper>
     );
-  }
-}
-
-class CustomListItemText extends Component {
-  render() {
-    return (
-      <ListItemText
-        disableTypography={true}
-        primary={this.props.text}
-        style={{
-          fontFamily: darkTheme.typography.fontFamily,
-          fontSize: darkTheme.typography.fontSize,
-        }}
-      />
-    )
   }
 }
 
