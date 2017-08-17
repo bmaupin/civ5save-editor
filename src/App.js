@@ -92,7 +92,7 @@ class App extends Component {
             <Toolbar>
               <Typography type="title"
                 // This makes sure the button is aligned on the right
-                style={{ flex:"1" }}>
+                style={{ flex: '1' }}>
                 {/* TODO: make this a constant */}
                 Civilization V save editor
               </Typography>
@@ -104,21 +104,17 @@ class App extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Grid container
+          <div
             style={{
               background: darkTheme.palette.background.default,
               color: darkTheme.palette.text.primary,
-              // Don't vertically shrink the sidebar to make room for content
-              flexWrap: 'nowrap',
-              // Fix grid gutter adding horizontal scrollbar
-              margin: 0,
+              display: 'flex',
               // TODO: we've subtracted the appbar height to prevent overflow. Is there a more elegant way to do this?
               minHeight: 'calc(100% - 64px)',
-              width: '100%',
             }}>
-            <Grid item
+            <div
               style={{
-                padding: 0,
+                minHeight: '100%',
               }}>
               <List style={{
                 backgroundColor: darkTheme.palette.background.paper,
@@ -134,31 +130,60 @@ class App extends Component {
                   savegame={this.state.savegame}
                 />
               </List>
-            </Grid>
-            {this.isSavegameLoaded() &&
-              <Grid item
-                style={{
-                  // Make sure content shrinks if there isn't enough space for it
-                  flexShrink: '1',
-                  // TODO: adjust this as necessary
-                  maxWidth: '1000px',
-                }}>
-                <ReadOnlyPropertiesList
-                  isSavegamePropertyDefined={this.isSavegamePropertyDefined}
-                  savegame={this.state.savegame}
-                />
-              </Grid>
-            }
-            {/*this.isSavegameLoaded() &&
-              <Grid item>
-                <VictoryTypes
-                  isSavegamePropertyDefined={this.isSavegamePropertyDefined}
-                  onPropertyChanged={this.handlePropertyChange}
-                  savegame={this.state.savegame}
-                />
-              </Grid>
-            */}
-          </Grid>
+            </div>
+            <div
+              style={{
+                // padding: 0,
+              }}>
+              {this.isSavegameLoaded() &&
+                <div
+                  style={{
+                    // TODO: adjust this as necessary
+                    maxWidth: '1000px',
+                  }}>
+                  <ReadOnlyPropertiesList
+                    isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                    savegame={this.state.savegame}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                    }}>
+                    <AdvancedOptions
+                      isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                      onPropertyChanged={this.handlePropertyChange}
+                      savegame={this.state.savegame}
+                    />
+                    <HiddenOptions
+                      isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                      onPropertyChanged={this.handlePropertyChange}
+                      savegame={this.state.savegame}
+                    />
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexFlow: 'column nowrap',
+                      }}>
+                      <VictoryTypes
+                        isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                        onPropertyChanged={this.handlePropertyChange}
+                        savegame={this.state.savegame}
+                      />
+                      {// TODO: Should hotseat games show multiplayer options??
+                        (this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
+                        this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
+                        <MultiplayerOptions
+                          isSavegamePropertyDefined={this.isSavegamePropertyDefined}
+                          onPropertyChanged={this.handlePropertyChange}
+                          savegame={this.state.savegame}
+                        />
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
         </div>
       </MuiThemeProvider>
     );
@@ -236,6 +261,197 @@ class FileUploader extends Component {
   }
 }
 
+class AdvancedOptions extends Component {
+  constructor(props) {
+    super(props);
+
+    this.advancedOptions = {
+      'completeKills': 'Complete kills',
+      'newRandomSeed': 'New random seed',
+      'noAncientRuins': 'No ancient ruins',
+      'noBarbarians': 'No barbarians',
+      'noCityRazing': 'No city razing',
+      'noEspionage': 'No espionage',
+      'oneCityChallenge': 'One city challenge',
+      'policySaving': 'Policy saving',
+      'promotionSaving': 'Promotion saving',
+      'ragingBarbarians': 'Raging barbarians',
+      'randomPersonalities': 'Random personalities',
+    }
+
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+  }
+
+  handleCheckboxClick(event) {
+    this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  render () {
+    return (
+      <div>
+        <Typography type="subheading"
+          style={{
+            margin: '20px 0 0 20px',
+          }}>
+          Advanced options
+        </Typography>
+        <Paper
+          style={{
+            // TODO
+            backgroundColor: darkTheme.palette.background.contentFrame,
+            margin: '20px',
+          }}
+        >
+          <FormGroup
+            style={{
+              fontSize: darkTheme.typography.fontSize,
+              padding: '10px 20px',
+            }}
+          >
+            {Object.keys(this.advancedOptions).map(propertyName =>
+              this.props.isSavegamePropertyDefined(propertyName) &&
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.props.savegame[propertyName]}
+                      onClick={this.handleCheckboxClick}
+                      value={propertyName}
+                    />
+                  }
+                  label={this.advancedOptions[propertyName]}
+                />
+            )}
+          </FormGroup>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+class HiddenOptions extends Component {
+  constructor(props) {
+    super(props);
+
+    this.hiddenOptions = {
+      'alwaysPeace': 'Always peace',
+      'alwaysWar': 'Always war',
+      'noChangingWarPeace': 'No changing war or peace',
+      'lockMods': 'Lock mods',
+      'noCultureOverviewUI': 'No culture overview UI',
+      'noHappiness': 'No happiness',
+      'noPolicies': 'No policies',
+      'noReligion': 'No religion',
+      'noScience': 'No science',
+      'noWorldCongress': 'No world congress',
+    }
+
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+  }
+
+  handleCheckboxClick(event) {
+    this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  render () {
+    return (
+      <div>
+        <Typography type="subheading"
+          style={{
+            margin: '20px 0 0 20px',
+          }}>
+          Hidden options
+        </Typography>
+        <Paper
+          style={{
+            // TODO
+            backgroundColor: darkTheme.palette.background.contentFrame,
+            margin: '20px',
+          }}
+        >
+          <FormGroup
+            style={{
+              fontSize: darkTheme.typography.fontSize,
+              padding: '10px 20px',
+            }}
+          >
+            {Object.keys(this.hiddenOptions).map(propertyName =>
+              this.props.isSavegamePropertyDefined(propertyName) &&
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.props.savegame[propertyName]}
+                      onClick={this.handleCheckboxClick}
+                      value={propertyName}
+                    />
+                  }
+                  label={this.hiddenOptions[propertyName]}
+                />
+            )}
+          </FormGroup>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+class MultiplayerOptions extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
+  }
+
+  handleCheckboxClick(event) {
+    this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  handleTextFieldChange(event) {
+    this.props.onPropertyChanged(event.target.name, event.target.value);
+  }
+
+  render() {
+    return (
+      <div>
+        <Typography type="subheading"
+          style={{
+            margin: '20px 0 0 20px',
+          }}>
+          Multiplayer options
+        </Typography>
+        <Paper
+          style={{
+            // TODO
+            backgroundColor: darkTheme.palette.background.contentFrame,
+            margin: '20px',
+          }}
+        >
+          <FormGroup
+            style={{
+              fontSize: darkTheme.typography.fontSize,
+              padding: '10px 20px',
+            }}
+          >
+            {/*TODO: add turn type, turn timer enabled, turn timer length*/}
+            {this.props.isSavegamePropertyDefined('privateGame') &&
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.props.savegame.privateGame}
+                    onClick={this.handleCheckboxClick}
+                    value="privateGame"
+                  />
+                }
+                label="Private game"
+              />
+            }
+          </FormGroup>
+        </Paper>
+      </div>
+    );
+  }
+}
+
 class ReadOnlyPropertiesList extends Component {
   constructor(props) {
     super(props);
@@ -270,7 +486,7 @@ class ReadOnlyPropertiesList extends Component {
         )}
         {this.props.isSavegamePropertyDefined('enabledDLC') &&
           <Grid item xs={12}>
-            <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ')}</em></Typography>
+            <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
           </Grid>
         }
       </Grid>
@@ -284,6 +500,14 @@ class VictoryTypes extends Component {
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
+
+    this.victoryTypeProperties = {
+      'timeVictory': 'Time victory',
+      'scienceVictory': 'Science victory',
+      'dominationVictory': 'Domination victory',
+      'culturalVictory': 'Cultural victory',
+      'diplomaticVictory': 'Diplomatic victory',
+    }
   }
 
   handleCheckboxClick(event) {
@@ -296,90 +520,51 @@ class VictoryTypes extends Component {
 
   render() {
     return (
-      <Paper
-        style={{
-          // TODO
-          backgroundColor: darkTheme.palette.background.contentFrame,
-        }}
-      >
-        <FormGroup
+      <div>
+        <Typography type="subheading"
           style={{
-            fontSize: darkTheme.typography.fontSize,
-            margin: '20px 0',
-            padding: '10px 20px',
+            margin: '20px 0 0 20px',
+          }}>
+          Victory types
+        </Typography>
+        <Paper
+          style={{
+            // TODO
+            backgroundColor: darkTheme.palette.background.contentFrame,
+            margin: '20px',
           }}
         >
-          {this.props.isSavegamePropertyDefined('maxTurns') &&
-            <TextField
-              label="Max turns"
-              name="maxTurns"
-              onChange={this.handleTextFieldChange}
-              type="number"
-              value={this.props.savegame.maxTurns}
-            />
-          }
-          {this.props.isSavegamePropertyDefined('timeVictory') &&
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.props.savegame.timeVictory}
-                  onClick={this.handleCheckboxClick}
-                  value="timeVictory"
+          <FormGroup
+            style={{
+              fontSize: darkTheme.typography.fontSize,
+              padding: '10px 20px',
+            }}
+          >
+            {this.props.isSavegamePropertyDefined('maxTurns') &&
+              <TextField
+                label="Max turns"
+                name="maxTurns"
+                onChange={this.handleTextFieldChange}
+                type="number"
+                value={this.props.savegame.maxTurns}
+              />
+            }
+            {Object.keys(this.victoryTypeProperties).map(propertyName =>
+              this.props.isSavegamePropertyDefined(propertyName) &&
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.props.savegame[propertyName]}
+                      onClick={this.handleCheckboxClick}
+                      value={propertyName}
+                    />
+                  }
+                  label={this.victoryTypeProperties[propertyName]}
                 />
-              }
-              label="Time victory"
-            />
-          }
-          {this.props.isSavegamePropertyDefined('scienceVictory') &&
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.props.savegame.scienceVictory}
-                  onClick={this.handleCheckboxClick}
-                  value="scienceVictory"
-                />
-              }
-              label="Science victory"
-            />
-          }
-          {this.props.isSavegamePropertyDefined('dominationVictory') &&
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.props.savegame.dominationVictory}
-                  onClick={this.handleCheckboxClick}
-                  value="dominationVictory"
-                />
-              }
-              label="Domination victory"
-            />
-          }
-          {this.props.isSavegamePropertyDefined('culturalVictory') &&
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.props.savegame.culturalVictory}
-                  onClick={this.handleCheckboxClick}
-                  value="culturalVictory"
-                />
-              }
-              label="Cultural victory"
-            />
-          }
-          {this.props.isSavegamePropertyDefined('diplomaticVictory') &&
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.props.savegame.diplomaticVictory}
-                  onClick={this.handleCheckboxClick}
-                  value="diplomaticVictory"
-                />
-              }
-              label="Diplomatic victory"
-            />
-          }
-        </FormGroup>
-      </Paper>
+            )}
+          </FormGroup>
+        </Paper>
+      </div>
     );
   }
 }
