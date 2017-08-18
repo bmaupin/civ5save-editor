@@ -1,6 +1,7 @@
 import AppBar from 'material-ui/AppBar';
 import Checkbox from 'material-ui/Checkbox';
 import Civ5Save from 'civ5save';
+import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import createTypography from 'material-ui/styles/typography';
@@ -139,7 +140,7 @@ class App extends Component {
                 <div
                   style={{
                     // TODO: adjust this as necessary
-                    maxWidth: '1000px',
+                    maxWidth: '900px',
                   }}>
                   <ReadOnlyPropertiesList
                     isSavegamePropertyDefined={this.isSavegamePropertyDefined}
@@ -266,15 +267,14 @@ class AdvancedOptions extends Component {
     super(props);
 
     this.advancedOptions = {
+      'policySaving': 'Allow policy saving',
+      'promotionSaving': 'Allow promotion saving',
       'completeKills': 'Complete kills',
+      // TODO: newRandomSeed should only be shown for singleplayer games
       'newRandomSeed': 'New random seed',
-      'noAncientRuins': 'No ancient ruins',
       'noBarbarians': 'No barbarians',
       'noCityRazing': 'No city razing',
-      'noEspionage': 'No espionage',
-      'oneCityChallenge': 'One city challenge',
-      'policySaving': 'Policy saving',
-      'promotionSaving': 'Promotion saving',
+      'oneCityChallenge': 'One-city challenge',
       'ragingBarbarians': 'Raging barbarians',
       'randomPersonalities': 'Random personalities',
     }
@@ -299,7 +299,7 @@ class AdvancedOptions extends Component {
           style={{
             // TODO
             backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '20px',
+            margin: '10px 20px 20px 20px',
           }}
         >
           <FormGroup
@@ -338,6 +338,7 @@ class HiddenOptions extends Component {
       'noChangingWarPeace': 'No changing war or peace',
       'lockMods': 'Lock mods',
       'noCultureOverviewUI': 'No culture overview UI',
+      'noEspionage': 'No espionage',
       'noHappiness': 'No happiness',
       'noPolicies': 'No policies',
       'noReligion': 'No religion',
@@ -365,7 +366,7 @@ class HiddenOptions extends Component {
           style={{
             // TODO
             backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '20px',
+            margin: '10px 20px 20px 20px',
           }}
         >
           <FormGroup
@@ -423,7 +424,7 @@ class MultiplayerOptions extends Component {
           style={{
             // TODO
             backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '20px',
+            margin: '10px 20px 20px 20px',
           }}
         >
           <FormGroup
@@ -456,6 +457,10 @@ class ReadOnlyPropertiesList extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      expanded: false,
+    };
+
     this.readOnlyProperties = {
       'gameBuild': 'Game build',
       'gameVersion': 'Game version',
@@ -471,25 +476,60 @@ class ReadOnlyPropertiesList extends Component {
     }
   }
 
+  handleExpandClick = () => {
+    this.setState({ expanded: !this.state.expanded });
+  };
+
   render () {
     return (
-      <Grid container
+      <div
         style={{
-          padding: '16px',
+          margin: '14px 0 0 20px',
         }}
       >
-        {Object.keys(this.readOnlyProperties).map(propertyName =>
-          this.props.isSavegamePropertyDefined(propertyName) &&
-            <Grid item xs={3}>
-              <Typography type='body1'>{this.readOnlyProperties[propertyName]}: <em>{this.props.savegame[propertyName]}</em></Typography>
-            </Grid>
-        )}
-        {this.props.isSavegamePropertyDefined('enabledDLC') &&
-          <Grid item xs={12}>
-            <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
+        <IconButton
+          aria-expanded={this.state.expanded}
+          aria-label="Game details"
+          onClick={this.handleExpandClick}
+          style={{
+            fontSize: darkTheme.typography.fontSize,
+            height: 'initial',
+            width: 'initial',
+          }}
+        >
+          <Typography type="subheading">
+            Game details
+          </Typography>
+          <Icon
+            style={{
+              margin: '6px',
+              transform: (this.state.expanded && 'rotate(180deg)'),
+              transition: darkTheme.transitions.create('transform', {
+                duration: darkTheme.transitions.duration.shortest,
+              })
+            }}
+          >expand_more</Icon>
+        </IconButton>
+        <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
+          <Grid container
+            style={{
+              padding: '8px 16px',
+            }}
+          >
+            {Object.keys(this.readOnlyProperties).map(propertyName =>
+              this.props.isSavegamePropertyDefined(propertyName) &&
+                <Grid item xs={2}>
+                  <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
+                </Grid>
+            )}
+            {this.props.isSavegamePropertyDefined('enabledDLC') &&
+              <Grid item xs={12}>
+                <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
+              </Grid>
+            }
           </Grid>
-        }
-      </Grid>
+        </Collapse>
+      </div>
     );
   }
 }
@@ -531,7 +571,7 @@ class VictoryTypes extends Component {
           style={{
             // TODO
             backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '20px',
+            margin: '10px 20px 20px 20px',
           }}
         >
           <FormGroup
