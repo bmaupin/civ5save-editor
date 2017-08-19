@@ -12,6 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import Radio, { RadioGroup } from 'material-ui/Radio';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import TextField from 'material-ui/TextField';
@@ -400,11 +401,16 @@ class MultiplayerOptions extends Component {
     super(props);
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleRadioGroupChange = this.handleRadioGroupChange.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
   }
 
   handleCheckboxClick(event) {
     this.props.onPropertyChanged(event.target.value, event.target.checked);
+  }
+
+  handleRadioGroupChange(event) {
+    this.props.onPropertyChanged(event.target.name, event.target.value);
   }
 
   handleTextFieldChange(event) {
@@ -433,7 +439,18 @@ class MultiplayerOptions extends Component {
               padding: '10px 20px',
             }}
           >
-            {/*TODO: add turn type, turn timer enabled, turn timer length*/}
+            {this.props.isSavegamePropertyDefined('pitboss') &&
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.props.savegame.pitboss}
+                    onClick={this.handleCheckboxClick}
+                    value="pitboss"
+                  />
+                }
+                label="Pitboss"
+              />
+            }
             {this.props.isSavegamePropertyDefined('privateGame') &&
               <FormControlLabel
                 control={
@@ -446,6 +463,52 @@ class MultiplayerOptions extends Component {
                 label="Private game"
               />
             }
+            {this.props.isSavegamePropertyDefined('turnTimerEnabled') &&
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.props.savegame.turnTimerEnabled}
+                    onClick={this.handleCheckboxClick}
+                    value="turnTimerEnabled"
+                  />
+                }
+                label="Turn timer"
+              />
+            }
+            {this.props.isSavegamePropertyDefined('turnTimerLength') &&
+              <div
+                style={{
+                  padding: '0 12px',
+                }}
+              >
+                <TextField
+                  disabled={!this.props.savegame.turnTimerEnabled}
+                  label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
+                  name="turnTimerLength"
+                  onChange={this.handleTextFieldChange}
+                  type="number"
+                  value={this.props.savegame.turnTimerLength}
+                />
+              </div>
+            }
+            <Typography type="body1"
+              style={{
+                paddingTop: '12px',
+              }}>
+              Turn mode
+            </Typography>
+            <RadioGroup
+              name="turnMode"
+              onChange={this.handleRadioGroupChange}
+              selectedValue={this.props.savegame.turnMode}
+              style={{
+                padding: '0 12px',
+              }}
+            >
+              <FormControlLabel value={Civ5Save.TURN_MODES.HYBRID} control={<Radio />} label={Civ5Save.TURN_MODES.HYBRID} />
+              <FormControlLabel value={Civ5Save.TURN_MODES.SEQUENTIAL} control={<Radio />} label={Civ5Save.TURN_MODES.SEQUENTIAL} />
+              <FormControlLabel value={Civ5Save.TURN_MODES.SIMULTANEOUS} control={<Radio />} label={Civ5Save.TURN_MODES.SIMULTANEOUS} />
+            </RadioGroup>
           </FormGroup>
         </Paper>
       </div>
@@ -542,7 +605,6 @@ class VictoryTypes extends Component {
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
 
     this.victoryTypeProperties = {
-      'timeVictory': 'Time victory',
       'scienceVictory': 'Science victory',
       'dominationVictory': 'Domination victory',
       'culturalVictory': 'Cultural victory',
@@ -580,14 +642,33 @@ class VictoryTypes extends Component {
               padding: '10px 20px',
             }}
           >
-            {this.props.isSavegamePropertyDefined('maxTurns') &&
-              <TextField
-                label="Max turns"
-                name="maxTurns"
-                onChange={this.handleTextFieldChange}
-                type="number"
-                value={this.props.savegame.maxTurns}
+            {this.props.isSavegamePropertyDefined('timeVictory') &&
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.props.savegame.timeVictory}
+                    onClick={this.handleCheckboxClick}
+                    value="timeVictory"
+                  />
+                }
+                label="Time victory"
               />
+            }
+            {this.props.isSavegamePropertyDefined('maxTurns') &&
+              <div
+                style={{
+                  padding: '0 12px',
+                }}
+              >
+                <TextField
+                  disabled={!this.props.savegame.timeVictory}
+                  label="Max turns"
+                  name="maxTurns"
+                  onChange={this.handleTextFieldChange}
+                  type="number"
+                  value={this.props.savegame.maxTurns}
+                />
+              </div>
             }
             {Object.keys(this.victoryTypeProperties).map(propertyName =>
               this.props.isSavegamePropertyDefined(propertyName) &&
