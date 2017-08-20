@@ -1,5 +1,6 @@
 import AppBar from 'material-ui/AppBar';
 import Checkbox from 'material-ui/Checkbox';
+import Civ5PropertyNumberTextField from './Civ5PropertyNumberTextField';
 import Civ5Save from 'civ5save';
 import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
@@ -15,7 +16,6 @@ import Paper from 'material-ui/Paper';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
-import TextField from 'material-ui/TextField';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { createStyleSheet, withStyles } from 'material-ui/styles';
@@ -406,7 +406,6 @@ class MultiplayerOptions extends Component {
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleRadioGroupChange = this.handleRadioGroupChange.bind(this);
-    this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
   }
 
   handleCheckboxClick(event) {
@@ -414,10 +413,6 @@ class MultiplayerOptions extends Component {
   }
 
   handleRadioGroupChange(event) {
-    this.props.onPropertyChanged(event.target.name, event.target.value);
-  }
-
-  handleTextFieldChange(event) {
     this.props.onPropertyChanged(event.target.name, event.target.value);
   }
 
@@ -478,20 +473,13 @@ class MultiplayerOptions extends Component {
               />
             }
             {this.props.isSavegamePropertyDefined('turnTimerLength') &&
-              <div
-                style={{
-                  padding: '0 12px',
-                }}
-              >
-                <TextField
-                  disabled={!this.props.savegame.turnTimerEnabled}
-                  label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
-                  name="turnTimerLength"
-                  onChange={this.handleTextFieldChange}
-                  type="number"
-                  value={this.props.savegame.turnTimerLength}
-                />
-              </div>
+              <Civ5PropertyNumberTextField
+                disabled={!this.props.savegame.turnTimerEnabled}
+                label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
+                onPropertyChanged={this.props.onPropertyChanged}
+                propertyName="turnTimerLength"
+                value={this.props.savegame.turnTimerLength}
+              />
             }
             {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
               this.props.isSavegamePropertyDefined('turnMode') &&
@@ -609,7 +597,6 @@ class VictoryTypes extends Component {
     super(props);
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-    this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
 
     this.victoryTypeProperties = {
       'scienceVictory': 'Science victory',
@@ -621,10 +608,10 @@ class VictoryTypes extends Component {
 
   handleCheckboxClick(event) {
     this.props.onPropertyChanged(event.target.value, event.target.checked);
-  }
 
-  handleTextFieldChange(event) {
-    this.props.onPropertyChanged(event.target.name, event.target.value);
+    if (event.target.value === 'timeVictory' && event.target.checked === false) {
+      this.props.onPropertyChanged('maxTurns', 0);
+    }
   }
 
   render() {
@@ -658,20 +645,13 @@ class VictoryTypes extends Component {
               />
             }
             {this.props.isSavegamePropertyDefined('maxTurns') &&
-              <div
-                style={{
-                  padding: '0 12px',
-                }}
-              >
-                <TextField
-                  disabled={!this.props.savegame.timeVictory}
-                  label="Max turns"
-                  name="maxTurns"
-                  onChange={this.handleTextFieldChange}
-                  type="number"
-                  value={this.props.savegame.maxTurns}
-                />
-              </div>
+              <Civ5PropertyNumberTextField
+                disabled={!this.props.savegame.timeVictory}
+                label="Max turns"
+                onPropertyChanged={this.props.onPropertyChanged}
+                propertyName="maxTurns"
+                value={this.props.savegame.maxTurns}
+              />
             }
             {Object.keys(this.victoryTypeProperties).map(propertyName =>
               this.props.isSavegamePropertyDefined(propertyName) &&
