@@ -18,6 +18,7 @@ import SvgIcon from 'material-ui/SvgIcon';
 import TextField from 'material-ui/TextField';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import { createStyleSheet, withStyles } from 'material-ui/styles';
 import './App.css';
 
 const darkTheme = (() => {
@@ -41,6 +42,13 @@ const darkTheme = (() => {
     typography: typography,
   });
 })();
+
+const styles = createStyleSheet(theme => ({
+  paper: {
+    backgroundColor: darkTheme.palette.background.contentFrame,
+    margin: '10px 20px 20px 20px',
+  },
+}));
 
 class App extends Component {
   constructor(props) {
@@ -152,11 +160,13 @@ class App extends Component {
                       display: 'flex',
                     }}>
                     <AdvancedOptions
+                      classes={this.props.classes}
                       isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
                     />
                     <HiddenOptions
+                      classes={this.props.classes}
                       isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
@@ -167,14 +177,16 @@ class App extends Component {
                         flexFlow: 'column nowrap',
                       }}>
                       <VictoryTypes
+                        classes={this.props.classes}
                         isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                         onPropertyChanged={this.handlePropertyChange}
                         savegame={this.state.savegame}
                       />
-                      {// TODO: Should hotseat games show multiplayer options??
+                      {
                         (this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
                         this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
                         <MultiplayerOptions
+                          classes={this.props.classes}
                           isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                           onPropertyChanged={this.handlePropertyChange}
                           savegame={this.state.savegame}
@@ -271,7 +283,7 @@ class AdvancedOptions extends Component {
       'policySaving': 'Allow policy saving',
       'promotionSaving': 'Allow promotion saving',
       'completeKills': 'Complete kills',
-      // TODO: newRandomSeed should only be shown for singleplayer games
+      // TODO: newRandomSeed should only be shown for singleplayer and hotseat games
       'newRandomSeed': 'New random seed',
       'noBarbarians': 'No barbarians',
       'noCityRazing': 'No city razing',
@@ -297,11 +309,7 @@ class AdvancedOptions extends Component {
           Advanced options
         </Typography>
         <Paper
-          style={{
-            // TODO
-            backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '10px 20px 20px 20px',
-          }}
+          className={this.props.classes.paper}
         >
           <FormGroup
             style={{
@@ -364,11 +372,7 @@ class HiddenOptions extends Component {
           Hidden options
         </Typography>
         <Paper
-          style={{
-            // TODO
-            backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '10px 20px 20px 20px',
-          }}
+          className={this.props.classes.paper}
         >
           <FormGroup
             style={{
@@ -427,11 +431,7 @@ class MultiplayerOptions extends Component {
           Multiplayer options
         </Typography>
         <Paper
-          style={{
-            // TODO
-            backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '10px 20px 20px 20px',
-          }}
+          className={this.props.classes.paper}
         >
           <FormGroup
             style={{
@@ -439,7 +439,8 @@ class MultiplayerOptions extends Component {
               padding: '10px 20px',
             }}
           >
-            {this.props.isSavegamePropertyDefined('pitboss') &&
+            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
+              this.props.isSavegamePropertyDefined('pitboss') &&
               <FormControlLabel
                 control={
                   <Checkbox
@@ -451,7 +452,8 @@ class MultiplayerOptions extends Component {
                 label="Pitboss"
               />
             }
-            {this.props.isSavegamePropertyDefined('privateGame') &&
+            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
+              this.props.isSavegamePropertyDefined('privateGame') &&
               <FormControlLabel
                 control={
                   <Checkbox
@@ -491,24 +493,29 @@ class MultiplayerOptions extends Component {
                 />
               </div>
             }
-            <Typography type="body1"
-              style={{
-                paddingTop: '12px',
-              }}>
-              Turn mode
-            </Typography>
-            <RadioGroup
-              name="turnMode"
-              onChange={this.handleRadioGroupChange}
-              selectedValue={this.props.savegame.turnMode}
-              style={{
-                padding: '0 12px',
-              }}
-            >
-              <FormControlLabel value={Civ5Save.TURN_MODES.HYBRID} control={<Radio />} label={Civ5Save.TURN_MODES.HYBRID} />
-              <FormControlLabel value={Civ5Save.TURN_MODES.SEQUENTIAL} control={<Radio />} label={Civ5Save.TURN_MODES.SEQUENTIAL} />
-              <FormControlLabel value={Civ5Save.TURN_MODES.SIMULTANEOUS} control={<Radio />} label={Civ5Save.TURN_MODES.SIMULTANEOUS} />
-            </RadioGroup>
+            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
+              this.props.isSavegamePropertyDefined('turnMode') &&
+              <div>
+                <Typography type="body1"
+                  style={{
+                    paddingTop: '12px',
+                  }}>
+                  Turn mode
+                </Typography>
+                <RadioGroup
+                  name="turnMode"
+                  onChange={this.handleRadioGroupChange}
+                  selectedValue={this.props.savegame.turnMode}
+                  style={{
+                    padding: '0 12px',
+                  }}
+                >
+                  <FormControlLabel value={Civ5Save.TURN_MODES.HYBRID} control={<Radio />} label={Civ5Save.TURN_MODES.HYBRID} />
+                  <FormControlLabel value={Civ5Save.TURN_MODES.SEQUENTIAL} control={<Radio />} label={Civ5Save.TURN_MODES.SEQUENTIAL} />
+                  <FormControlLabel value={Civ5Save.TURN_MODES.SIMULTANEOUS} control={<Radio />} label={Civ5Save.TURN_MODES.SIMULTANEOUS} />
+                </RadioGroup>
+              </div>
+            }
           </FormGroup>
         </Paper>
       </div>
@@ -630,11 +637,7 @@ class VictoryTypes extends Component {
           Victory types
         </Typography>
         <Paper
-          style={{
-            // TODO
-            backgroundColor: darkTheme.palette.background.contentFrame,
-            margin: '10px 20px 20px 20px',
-          }}
+          className={this.props.classes.paper}
         >
           <FormGroup
             style={{
@@ -690,7 +693,7 @@ class VictoryTypes extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
 
 // https://stackoverflow.com/a/416327/399105
 function isNullOrUndefined(variable) {
