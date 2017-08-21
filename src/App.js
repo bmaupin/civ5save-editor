@@ -203,6 +203,7 @@ class App extends Component {
                     maxWidth: '900px',
                   }}>
                   <ReadOnlyPropertiesList
+                    classes={this.props.classes}
                     isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                     savegame={this.state.savegame}
                   />
@@ -637,11 +638,7 @@ class ReadOnlyPropertiesList extends Component {
 
   render () {
     return (
-      <div
-        style={{
-          margin: '14px 0 0 20px',
-        }}
-      >
+      <div>
         <IconButton
           aria-expanded={this.state.expanded}
           aria-label="Game details"
@@ -649,6 +646,7 @@ class ReadOnlyPropertiesList extends Component {
           style={{
             fontSize: darkTheme.typography.fontSize,
             height: 'initial',
+            margin: '14px 0 0 20px',
             width: 'initial',
           }}
         >
@@ -666,23 +664,27 @@ class ReadOnlyPropertiesList extends Component {
           >expand_more</Icon>
         </IconButton>
         <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-          <Grid container
-            style={{
-              padding: '8px 16px',
-            }}
+          <Paper
+            className={this.props.classes.paper}
           >
-            {Object.keys(this.readOnlyProperties).map(propertyName =>
-              this.props.isSavegamePropertyDefined(propertyName) &&
-                <Grid item key={propertyName} xs={2}>
-                  <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
+            <Grid container
+              style={{
+                padding: '10px 20px',
+              }}
+            >
+              {Object.keys(this.readOnlyProperties).map(propertyName =>
+                this.props.isSavegamePropertyDefined(propertyName) &&
+                  <Grid item key={propertyName} xs={2}>
+                    <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
+                  </Grid>
+              )}
+              {this.props.isSavegamePropertyDefined('enabledDLC') &&
+                <Grid item xs={12}>
+                  <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
                 </Grid>
-            )}
-            {this.props.isSavegamePropertyDefined('enabledDLC') &&
-              <Grid item xs={12}>
-                <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
-              </Grid>
-            }
-          </Grid>
+              }
+            </Grid>
+          </Paper>
         </Collapse>
       </div>
     );
