@@ -1,5 +1,6 @@
 import AppBar from 'material-ui/AppBar';
 import Checkbox from 'material-ui/Checkbox';
+import { CircularProgress } from 'material-ui/Progress';
 import Civ5PropertyNumberTextField from './Civ5PropertyNumberTextField';
 import Civ5Save from 'civ5save';
 import Collapse from 'material-ui/transitions/Collapse';
@@ -55,18 +56,27 @@ class App extends Component {
     super(props);
 
     this.state = {
-      savegame: null
+      savegame: null,
+      savegameState: App.SAVEGAME_STATES.NOT_LOADED,
     };
 
+    this.changeSavegameState = this.changeSavegameState.bind(this);
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
-    this.isSavegameLoaded = this.isSavegameLoaded.bind(this);
     this.isSavegamePropertyDefined = this.isSavegamePropertyDefined.bind(this);
+  }
+
+  changeSavegameState(newState) {
+    console.log('changeSavegameState');
+    this.setState({
+      savegameState: newState,
+    });
   }
 
   handleNewSavegame(newSavegame) {
     this.setState({
-      savegame: newSavegame
+      savegame: newSavegame,
+      savegameState: App.SAVEGAME_STATES.LOADED,
     });
   }
 
@@ -75,10 +85,6 @@ class App extends Component {
       previousState.savegame[propertyName] = newValue;
       return previousState;
     });
-  }
-
-  isSavegameLoaded() {
-    return !isNullOrUndefined(this.state.savegame);
   }
 
   isSavegamePropertyDefined(propertyName) {
@@ -133,19 +139,47 @@ class App extends Component {
                 padding: '8px 0 0',
               }}>
                 <FileUploader
+                  changeSavegameState={this.changeSavegameState}
                   onNewSavegame={this.handleNewSavegame}
                 />
                 <FileDownloader
-                  disabled={!this.isSavegameLoaded()}
+                  disabled={this.state.savegameState !== App.SAVEGAME_STATES.LOADED}
                   savegame={this.state.savegame}
                 />
               </List>
             </div>
             <div
               style={{
-                // padding: 0,
+                flex: '1',
               }}>
-              {this.isSavegameLoaded() &&
+              {this.state.savegameState === App.SAVEGAME_STATES.NOT_LOADED &&
+                <List style={{
+                  opacity: '0.8',
+                  padding: '8px',
+                }}>
+                  <ListItem>
+                    <ListItemText primary="← Open Civilization V save file from your computer" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="← Download new save file with changes" />
+                  </ListItem>
+                </List>
+              }
+              {this.state.savegameState === App.SAVEGAME_STATES.LOADING &&
+                <div
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <div>
+                    <CircularProgress size={50} />
+                  </div>
+                </div>
+              }
+              {this.state.savegameState === App.SAVEGAME_STATES.LOADED &&
                 <div
                   style={{
                     // TODO: adjust this as necessary
@@ -251,6 +285,7 @@ class FileUploader extends Component {
 
   async handleChange(event) {
     if (this.refs.fileUploader.files.length > 0) {
+      this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
       let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
       this.props.onNewSavegame(newSavegame);
     }
@@ -268,7 +303,7 @@ class FileUploader extends Component {
         <ListItemIcon>
           <Icon>folder_open</Icon>
         </ListItemIcon>
-        <ListItemText primary="Open Civ5Save" />
+        <ListItemText primary="Open save file" />
         <input type="file" ref="fileUploader" onChange={this.handleChange} style={{display: "none"}} />
       </ListItem>
     );
@@ -327,6 +362,7 @@ class AdvancedOptions extends Component {
                       value={propertyName}
                     />
                   }
+                  key={propertyName}
                   label={this.advancedOptions[propertyName]}
                 />
             )}
@@ -390,6 +426,7 @@ class HiddenOptions extends Component {
                       value={propertyName}
                     />
                   }
+                  key={propertyName}
                   label={this.hiddenOptions[propertyName]}
                 />
             )}
@@ -576,7 +613,7 @@ class ReadOnlyPropertiesList extends Component {
           >
             {Object.keys(this.readOnlyProperties).map(propertyName =>
               this.props.isSavegamePropertyDefined(propertyName) &&
-                <Grid item xs={2}>
+                <Grid item key={propertyName} xs={2}>
                   <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
                 </Grid>
             )}
@@ -663,6 +700,7 @@ class VictoryTypes extends Component {
                       value={propertyName}
                     />
                   }
+                  key={propertyName}
                   label={this.victoryTypeProperties[propertyName]}
                 />
             )}
@@ -672,6 +710,12 @@ class VictoryTypes extends Component {
     );
   }
 }
+
+App.SAVEGAME_STATES = {
+  LOADED: 'Loaded',
+  LOADING: 'Loading',
+  NOT_LOADED: 'Not loaded',
+};
 
 export default withStyles(styles)(App);
 
