@@ -1,7 +1,7 @@
 import AppBar from 'material-ui/AppBar';
 import Checkbox from 'material-ui/Checkbox';
 import { CircularProgress } from 'material-ui/Progress';
-import Civ5PropertyNumberTextField from './Civ5PropertyNumberTextField';
+import Civ5PropertyNumberTextField from './components/Civ5PropertyNumberTextField';
 import Civ5Save from 'civ5save';
 import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
@@ -22,6 +22,7 @@ import Typography from 'material-ui/Typography';
 import { createStyleSheet, withStyles } from 'material-ui/styles';
 import './App.css';
 
+const DEMO_SAVE_FILE = 'demo/demo.Civ5Save';
 const REPO_URL = 'https://github.com/bmaupin/react-civ5save';
 
 const darkTheme = (() => {
@@ -35,7 +36,7 @@ const darkTheme = (() => {
     fontSize: 'initial',
   });
 
-  // Nested properties can be defined in createTypography()
+  // Nested properties can't be defined in createTypography()
   typography.body1.fontSize = 'initial';
   typography.subheading.fontSize = '1.17em';
   typography.title.fontSize = '1.5em';
@@ -69,15 +70,15 @@ class App extends Component {
   }
 
   changeSavegameState(newState) {
-    console.log('changeSavegameState');
     this.setState({
       savegameState: newState,
     });
   }
 
-  handleNewSavegame(newSavegame) {
+  handleNewSavegame(newSavegame, newSavegameFilename) {
     this.setState({
       savegame: newSavegame,
+      savegameFilename: newSavegameFilename,
       savegameState: App.SAVEGAME_STATES.LOADED,
     });
   }
@@ -146,6 +147,7 @@ class App extends Component {
                 <FileDownloader
                   disabled={this.state.savegameState !== App.SAVEGAME_STATES.LOADED}
                   savegame={this.state.savegame}
+                  savegameFilename={this.state.savegameFilename}
                 />
                 <ListItem button component="a" href={`${REPO_URL}/issues`}>
                   <ListItemIcon>
@@ -169,16 +171,16 @@ class App extends Component {
                   padding: '8px',
                 }}>
                   <ListItem>
-                    <ListItemText primary="← Open Civilization V save file from your computer" />
+                    <ListItemText primary="← Start by clicking here to open a Civilization V save file from your computer" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="← Download new save file with changes" />
+                    <ListItemText primary="← When you're done, click here to download a new save file with the changes" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="← Report a bug" />
+                    <ListItemText primary="← If you have any problems, you can report a bug here" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="← Demo with a real save file" />
+                    <ListItemText primary="← Click here to see what the editor looks like without having to open a save file" />
                   </ListItem>
                 </List>
               }
@@ -280,9 +282,9 @@ class DemoButton extends Component {
 
   async handleClick(event) {
     this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
-    let fileBlob = await this.getFileBlob('demo/demo.Civ5Save');
-    let demoSavegame = await Civ5Save.fromFile(fileBlob);
-    this.props.onNewSavegame(demoSavegame);
+    let demoSaveFile = await this.getFileBlob(DEMO_SAVE_FILE);
+    let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
+    this.props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
   }
 
   render() {
@@ -314,7 +316,7 @@ class FileDownloader extends Component {
         URL.revokeObjectURL(this.downloadURL);
       }
 
-      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toFile('New.Civ5Save'));
+      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toFile(this.props.savegameFilename));
       return this.downloadURL;
     }
   }
@@ -324,7 +326,7 @@ class FileDownloader extends Component {
       <ListItem button
         component="a"
         disabled={this.props.disabled}
-        download="New.Civ5Save"
+        download={this.props.savegameFilename}
         href={this.createDownloadURL()}
       >
         <ListItemIcon>
@@ -347,8 +349,9 @@ class FileUploader extends Component {
   async handleChange(event) {
     if (this.refs.fileUploader.files.length > 0) {
       this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
-      let newSavegame = await Civ5Save.fromFile(this.refs.fileUploader.files[0]);
-      this.props.onNewSavegame(newSavegame);
+      let newSaveFile = this.refs.fileUploader.files[0];
+      let newSavegame = await Civ5Save.fromFile(newSaveFile);
+      this.props.onNewSavegame(newSavegame, newSaveFile.name);
     }
   }
 
@@ -441,8 +444,8 @@ class HiddenOptions extends Component {
     this.hiddenOptions = {
       'alwaysPeace': 'Always peace',
       'alwaysWar': 'Always war',
-      'noChangingWarPeace': 'No changing war or peace',
       'lockMods': 'Lock mods',
+      'noChangingWarPeace': 'No changing war or peace',
       'noCultureOverviewUI': 'No culture overview UI',
       'noEspionage': 'No espionage',
       'noHappiness': 'No happiness',
