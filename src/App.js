@@ -22,6 +22,7 @@ import Typography from 'material-ui/Typography';
 import { createStyleSheet, withStyles } from 'material-ui/styles';
 import './App.css';
 
+const APP_TITLE = 'Civilization V save editor';
 const DEMO_SAVE_FILE = 'demo/demo.Civ5Save';
 const REPO_URL = 'https://github.com/bmaupin/react-civ5save';
 
@@ -117,11 +118,12 @@ class App extends Component {
               position: 'relative',
             }}>
             <Toolbar>
-              <Typography type="title"
+              <Typography
                 // This makes sure the button is aligned on the right
-                style={{ flex: '1' }}>
-                {/* TODO: make this a constant */}
-                Civilization V save editor
+                style={{ flex: '1' }}
+                type="title"
+              >
+                {APP_TITLE}
               </Typography>
               <IconButton color="contrast" href={REPO_URL}>
                 <SvgIcon>
@@ -283,6 +285,13 @@ class App extends Component {
   }
 }
 
+App.SAVEGAME_STATES = {
+  ERROR: 'Error',
+  LOADED: 'Loaded',
+  LOADING: 'Loading',
+  NOT_LOADED: 'Not loaded',
+};
+
 class DemoButton extends Component {
   constructor(props) {
     super(props);
@@ -411,13 +420,16 @@ class AdvancedOptions extends Component {
       'policySaving': 'Allow policy saving',
       'promotionSaving': 'Allow promotion saving',
       'completeKills': 'Complete kills',
-      // TODO: newRandomSeed should only be shown for singleplayer and hotseat games
       'newRandomSeed': 'New random seed',
       'noBarbarians': 'No barbarians',
       'noCityRazing': 'No city razing',
       'oneCityChallenge': 'One-city challenge',
       'ragingBarbarians': 'Raging barbarians',
       'randomPersonalities': 'Random personalities',
+    }
+
+    if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
+      delete this.advancedOptions.newRandomSeed;
     }
 
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
@@ -804,13 +816,6 @@ class VictoryTypes extends Component {
     );
   }
 }
-
-App.SAVEGAME_STATES = {
-  ERROR: 'Error',
-  LOADED: 'Loaded',
-  LOADING: 'Loading',
-  NOT_LOADED: 'Not loaded',
-};
 
 export default withStyles(styles)(App);
 
