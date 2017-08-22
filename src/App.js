@@ -64,6 +64,7 @@ class App extends Component {
     };
 
     this.changeSavegameState = this.changeSavegameState.bind(this);
+    this.handleError = this.handleError.bind(this);
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
     this.isSavegamePropertyDefined = this.isSavegamePropertyDefined.bind(this);
@@ -72,6 +73,13 @@ class App extends Component {
   changeSavegameState(newState) {
     this.setState({
       savegameState: newState,
+    });
+  }
+
+  handleError(error) {
+    this.setState({
+      error: error,
+      savegameState: App.SAVEGAME_STATES.ERROR,
     });
   }
 
@@ -142,6 +150,7 @@ class App extends Component {
               }}>
                 <FileUploader
                   changeSavegameState={this.changeSavegameState}
+                  onError={this.handleError}
                   onNewSavegame={this.handleNewSavegame}
                 />
                 <FileDownloader
@@ -250,6 +259,22 @@ class App extends Component {
                   </div>
                 </div>
               }
+              {this.state.savegameState === App.SAVEGAME_STATES.ERROR &&
+                <Typography type="subheading"
+                  style={{
+                    margin: '20px',
+                  }}
+                >
+                  <p><Icon style={{ fontSize: '50px' }}>error_outline</Icon></p>
+                  <p>The following error was encountered when trying to open your save file:</p>
+                  <p>
+                  <code>
+                    {this.state.error.message}
+                  </code>
+                  </p>
+                  <p>Please try another file or use the link on the left to report a bug.</p>
+                </Typography>
+              }
             </div>
           </div>
         </div>
@@ -350,8 +375,12 @@ class FileUploader extends Component {
     if (this.refs.fileUploader.files.length > 0) {
       this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
       let newSaveFile = this.refs.fileUploader.files[0];
-      let newSavegame = await Civ5Save.fromFile(newSaveFile);
-      this.props.onNewSavegame(newSavegame, newSaveFile.name);
+      try {
+        let newSavegame = await Civ5Save.fromFile(newSaveFile);
+        this.props.onNewSavegame(newSavegame, newSaveFile.name);
+      } catch (e) {
+        this.props.onError(e);
+      }
     }
   }
 
@@ -777,6 +806,7 @@ class VictoryTypes extends Component {
 }
 
 App.SAVEGAME_STATES = {
+  ERROR: 'Error',
   LOADED: 'Loaded',
   LOADING: 'Loading',
   NOT_LOADED: 'Not loaded',
