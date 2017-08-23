@@ -405,102 +405,82 @@ class FileUploader extends Component {
   }
 }
 
-class AdvancedProperties extends Component {
-  constructor(props) {
-    super(props);
-
-    this.advancedProperties = {
-      'policySaving': 'Allow policy saving',
-      'promotionSaving': 'Allow promotion saving',
-      'completeKills': 'Complete kills',
-      'newRandomSeed': 'New random seed',
-      'noBarbarians': 'No barbarians',
-      'noCityRazing': 'No city razing',
-      'oneCityChallenge': 'One-city challenge',
-      'ragingBarbarians': 'Raging barbarians',
-      'randomPersonalities': 'Random personalities',
-    }
-
-    if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
-      delete this.advancedProperties.newRandomSeed;
-    }
+function AdvancedProperties(props) {
+  let advancedProperties = {
+    'policySaving': 'Allow policy saving',
+    'promotionSaving': 'Allow promotion saving',
+    'completeKills': 'Complete kills',
+    'newRandomSeed': 'New random seed',
+    'noBarbarians': 'No barbarians',
+    'noCityRazing': 'No city razing',
+    'oneCityChallenge': 'One-city challenge',
+    'ragingBarbarians': 'Raging barbarians',
+    'randomPersonalities': 'Random personalities',
   }
 
-  render() {
-    return (
-      <PropertyList
-        classes={this.props.classes}
-        label="Advanced options"
-        onPropertyChanged={this.props.onPropertyChanged}
-        savegame={this.props.savegame}
-        saveProperties={this.advancedProperties}
-      />
-    );
+  if (props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
+    delete advancedProperties.newRandomSeed;
   }
+
+  return (
+    <PropertyList
+      classes={props.classes}
+      label="Advanced options"
+      onPropertyChanged={props.onPropertyChanged}
+      savegame={props.savegame}
+      saveProperties={advancedProperties}
+    />
+  );
 }
 
-class HiddenProperties extends Component {
-  constructor(props) {
-    super(props);
-
-    this.hiddenProperties = {
-      'alwaysPeace': 'Always peace',
-      'alwaysWar': 'Always war',
-      'lockMods': 'Lock mods',
-      'noChangingWarPeace': 'No changing war or peace',
-      'noCultureOverviewUI': 'No culture overview UI',
-      'noEspionage': 'No espionage',
-      'noHappiness': 'No happiness',
-      'noPolicies': 'No policies',
-      'noReligion': 'No religion',
-      'noScience': 'No science',
-      'noWorldCongress': 'No world congress',
-    }
-  }
-
-  render() {
-    return (
-      <PropertyList
-        classes={this.props.classes}
-        label="Hidden options"
-        onPropertyChanged={this.props.onPropertyChanged}
-        savegame={this.props.savegame}
-        saveProperties={this.hiddenProperties}
-      />
-    );
-  }
+function HiddenProperties(props) {
+  return (
+    <PropertyList
+      classes={props.classes}
+      label="Hidden options"
+      onPropertyChanged={props.onPropertyChanged}
+      savegame={props.savegame}
+      saveProperties={{
+        'alwaysPeace': 'Always peace',
+        'alwaysWar': 'Always war',
+        'lockMods': 'Lock mods',
+        'noChangingWarPeace': 'No changing war or peace',
+        'noCultureOverviewUI': 'No culture overview UI',
+        'noEspionage': 'No espionage',
+        'noHappiness': 'No happiness',
+        'noPolicies': 'No policies',
+        'noReligion': 'No religion',
+        'noScience': 'No science',
+        'noWorldCongress': 'No world congress',
+      }}
+    />
+  );
 }
 
-class MultiplayerProperties extends Component {
-  constructor(props) {
-    super(props);
-
-    this.multiplayerProperties = {
-      'pitboss': 'Pitboss',
-      'privateGame': 'Private game',
-      'turnTimerEnabled': 'Turn timer',
-      'turnTimerLength': '',
-      'turnMode': 'Turn mode',
-    }
-
-    if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
-      delete this.multiplayerProperties.pitboss;
-      delete this.multiplayerProperties.privateGame;
-      delete this.multiplayerProperties.turnMode;
-    }
+function MultiplayerProperties(props) {
+  let multiplayerProperties = {
+    'pitboss': 'Pitboss',
+    'privateGame': 'Private game',
+    'turnTimerEnabled': 'Turn timer',
+    'turnTimerLength': '',
+    'turnMode': 'Turn mode',
   }
 
-  render() {
-    return (
-      <PropertyList
-        classes={this.props.classes}
-        label="Multiplayer options"
-        onPropertyChanged={this.props.onPropertyChanged}
-        savegame={this.props.savegame}
-        saveProperties={this.multiplayerProperties}
-      />
-    );
+  if (props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
+    delete multiplayerProperties.pitboss;
+    delete multiplayerProperties.privateGame;
+    delete multiplayerProperties.turnMode;
   }
+
+  return (
+    <PropertyList
+      classes={props.classes}
+      label="Multiplayer options"
+      onPropertyChanged={props.onPropertyChanged}
+      savegame={props.savegame}
+      saveProperties={multiplayerProperties}
+    />
+  );
 }
 
 class ReadOnlyPropertiesList extends Component {
@@ -589,31 +569,23 @@ class ReadOnlyPropertiesList extends Component {
   }
 }
 
-class VictoryTypes extends Component {
-  constructor(props) {
-    super(props);
-
-    this.victoryTypeProperties = {
-      'timeVictory': 'Time victory',
-      'maxTurns': 'Max turns',
-      'scienceVictory': 'Science victory',
-      'dominationVictory': 'Domination victory',
-      'culturalVictory': 'Cultural victory',
-      'diplomaticVictory': 'Diplomatic victory',
-    }
-  }
-
-  render() {
-    return (
-      <PropertyList
-        classes={this.props.classes}
-        label="Victory types"
-        onPropertyChanged={this.props.onPropertyChanged}
-        savegame={this.props.savegame}
-        saveProperties={this.victoryTypeProperties}
-      />
-    );
-  }
+function VictoryTypes(props) {
+  return (
+    <PropertyList
+      classes={props.classes}
+      label="Victory types"
+      onPropertyChanged={props.onPropertyChanged}
+      savegame={props.savegame}
+      saveProperties={{
+        'timeVictory': 'Time victory',
+        'maxTurns': 'Max turns',
+        'scienceVictory': 'Science victory',
+        'dominationVictory': 'Domination victory',
+        'culturalVictory': 'Cultural victory',
+        'diplomaticVictory': 'Diplomatic victory',
+      }}
+    />
+  );
 }
 
 export default withStyles(styles)(App);
