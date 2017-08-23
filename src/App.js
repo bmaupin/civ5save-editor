@@ -1,7 +1,5 @@
 import AppBar from 'material-ui/AppBar';
-import Checkbox from 'material-ui/Checkbox';
 import { CircularProgress } from 'material-ui/Progress';
-import Civ5PropertyNumberTextField from './components/Civ5PropertyNumberTextField';
 import Civ5Save from 'civ5save';
 import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
@@ -14,6 +12,8 @@ import IconButton from 'material-ui/IconButton';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import PropertyCheckbox from './components/PropertyCheckbox';
+import PropertyNumberTextField from './components/PropertyNumberTextField';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -68,7 +68,6 @@ class App extends Component {
     this.handleError = this.handleError.bind(this);
     this.handleNewSavegame = this.handleNewSavegame.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
-    this.isSavegamePropertyDefined = this.isSavegamePropertyDefined.bind(this);
   }
 
   changeSavegameState(newState) {
@@ -97,10 +96,6 @@ class App extends Component {
       previousState.savegame[propertyName] = newValue;
       return previousState;
     });
-  }
-
-  isSavegamePropertyDefined(propertyName) {
-    return !isNullOrUndefined(this.state) && !isNullOrUndefined(this.state.savegame) && typeof this.state.savegame[propertyName] !== 'undefined';
   }
 
   render() {
@@ -139,17 +134,21 @@ class App extends Component {
               display: 'flex',
               // TODO: we've subtracted the appbar height to prevent overflow. Is there a more elegant way to do this?
               minHeight: 'calc(100% - 64px)',
-            }}>
+            }}
+          >
             <div
               style={{
                 minHeight: '100%',
-              }}>
-              <List style={{
-                backgroundColor: darkTheme.palette.background.paper,
-                // TODO: we've subtracted the padding height to prevent overflow. Is there a more elegant way to do this?
-                height: 'calc(100% - 8px)',
-                padding: '8px 0 0',
-              }}>
+              }}
+            >
+              <List
+                style={{
+                  backgroundColor: darkTheme.palette.background.paper,
+                  // TODO: we've subtracted the padding height to prevent overflow. Is there a more elegant way to do this?
+                  height: 'calc(100% - 8px)',
+                  padding: '8px 0 0',
+                }}
+              >
                 <FileUploader
                   changeSavegameState={this.changeSavegameState}
                   onError={this.handleError}
@@ -175,12 +174,15 @@ class App extends Component {
             <div
               style={{
                 flex: '1',
-              }}>
+              }}
+            >
               {this.state.savegameState === App.SAVEGAME_STATES.NOT_LOADED &&
-                <List style={{
-                  opacity: '0.8',
-                  padding: '8px',
-                }}>
+                <List
+                  style={{
+                    opacity: '0.8',
+                    padding: '8px',
+                  }}
+                >
                   <ListItem>
                     <ListItemText primary="← Start by clicking here to open a Civilization V save file from your computer" />
                   </ListItem>
@@ -217,7 +219,6 @@ class App extends Component {
                   }}>
                   <ReadOnlyPropertiesList
                     classes={this.props.classes}
-                    isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                     savegame={this.state.savegame}
                   />
                   <div
@@ -226,13 +227,11 @@ class App extends Component {
                     }}>
                     <AdvancedOptions
                       classes={this.props.classes}
-                      isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
                     />
                     <HiddenOptions
                       classes={this.props.classes}
-                      isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
                     />
@@ -243,16 +242,13 @@ class App extends Component {
                       }}>
                       <VictoryTypes
                         classes={this.props.classes}
-                        isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                         onPropertyChanged={this.handlePropertyChange}
                         savegame={this.state.savegame}
                       />
-                      {
-                        (this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
+                      {(this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
                         this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
                         <MultiplayerOptions
                           classes={this.props.classes}
-                          isSavegamePropertyDefined={this.isSavegamePropertyDefined}
                           onPropertyChanged={this.handlePropertyChange}
                           savegame={this.state.savegame}
                         />
@@ -431,12 +427,6 @@ class AdvancedOptions extends Component {
     if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
       delete this.advancedOptions.newRandomSeed;
     }
-
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-  }
-
-  handleCheckboxClick(event) {
-    this.props.onPropertyChanged(event.target.value, event.target.checked);
   }
 
   render () {
@@ -458,18 +448,13 @@ class AdvancedOptions extends Component {
             }}
           >
             {Object.keys(this.advancedOptions).map(propertyName =>
-              this.props.isSavegamePropertyDefined(propertyName) &&
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.props.savegame[propertyName]}
-                      onClick={this.handleCheckboxClick}
-                      value={propertyName}
-                    />
-                  }
-                  key={propertyName}
-                  label={this.advancedOptions[propertyName]}
-                />
+              <PropertyCheckbox
+                checked={this.props.savegame[propertyName]}
+                key={propertyName}
+                label={this.advancedOptions[propertyName]}
+                onPropertyChanged={this.props.onPropertyChanged}
+                value={propertyName}
+              />
             )}
           </FormGroup>
         </Paper>
@@ -495,12 +480,6 @@ class HiddenOptions extends Component {
       'noScience': 'No science',
       'noWorldCongress': 'No world congress',
     }
-
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-  }
-
-  handleCheckboxClick(event) {
-    this.props.onPropertyChanged(event.target.value, event.target.checked);
   }
 
   render () {
@@ -522,18 +501,13 @@ class HiddenOptions extends Component {
             }}
           >
             {Object.keys(this.hiddenOptions).map(propertyName =>
-              this.props.isSavegamePropertyDefined(propertyName) &&
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.props.savegame[propertyName]}
-                      onClick={this.handleCheckboxClick}
-                      value={propertyName}
-                    />
-                  }
-                  key={propertyName}
-                  label={this.hiddenOptions[propertyName]}
-                />
+              <PropertyCheckbox
+                checked={this.props.savegame[propertyName]}
+                key={propertyName}
+                label={this.hiddenOptions[propertyName]}
+                onPropertyChanged={this.props.onPropertyChanged}
+                value={propertyName}
+              />
             )}
           </FormGroup>
         </Paper>
@@ -546,12 +520,19 @@ class MultiplayerOptions extends Component {
   constructor(props) {
     super(props);
 
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-    this.handleRadioGroupChange = this.handleRadioGroupChange.bind(this);
-  }
+    this.multiplayerOptions = {
+      'pitboss': 'Pitboss',
+      'privateGame': 'Private game',
+      'turnTimerEnabled': 'Turn timer',
+      'turnTimerLength': '',
+    }
 
-  handleCheckboxClick(event) {
-    this.props.onPropertyChanged(event.target.value, event.target.checked);
+    if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
+      delete this.multiplayerOptions.pitboss;
+      delete this.multiplayerOptions.privateGame;
+    }
+
+    this.handleRadioGroupChange = this.handleRadioGroupChange.bind(this);
   }
 
   handleRadioGroupChange(event) {
@@ -576,55 +557,26 @@ class MultiplayerOptions extends Component {
               padding: '10px 20px',
             }}
           >
+            {Object.keys(this.multiplayerOptions).map(propertyName =>
+              propertyName === 'turnTimerLength' ?
+                <PropertyNumberTextField
+                  disabled={!this.props.savegame.turnTimerEnabled}
+                  label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
+                  key={propertyName}
+                  name={propertyName}
+                  onPropertyChanged={this.props.onPropertyChanged}
+                  value={this.props.savegame[propertyName]}
+                />
+              :
+                <PropertyCheckbox
+                  checked={this.props.savegame[propertyName]}
+                  key={propertyName}
+                  label={this.multiplayerOptions[propertyName]}
+                  onPropertyChanged={this.props.onPropertyChanged}
+                  value={propertyName}
+                />
+            )}
             {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
-              this.props.isSavegamePropertyDefined('pitboss') &&
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.props.savegame.pitboss}
-                    onClick={this.handleCheckboxClick}
-                    value="pitboss"
-                  />
-                }
-                label="Pitboss"
-              />
-            }
-            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
-              this.props.isSavegamePropertyDefined('privateGame') &&
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.props.savegame.privateGame}
-                    onClick={this.handleCheckboxClick}
-                    value="privateGame"
-                  />
-                }
-                label="Private game"
-              />
-            }
-            {this.props.isSavegamePropertyDefined('turnTimerEnabled') &&
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.props.savegame.turnTimerEnabled}
-                    onClick={this.handleCheckboxClick}
-                    value="turnTimerEnabled"
-                  />
-                }
-                label="Turn timer"
-              />
-            }
-            {this.props.isSavegamePropertyDefined('turnTimerLength') &&
-              <Civ5PropertyNumberTextField
-                disabled={!this.props.savegame.turnTimerEnabled}
-                label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
-                onPropertyChanged={this.props.onPropertyChanged}
-                propertyName="turnTimerLength"
-                value={this.props.savegame.turnTimerLength}
-              />
-            }
-            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
-              this.props.isSavegamePropertyDefined('turnMode') &&
               <div>
                 <Typography type="body1"
                   style={{
@@ -680,6 +632,10 @@ class ReadOnlyPropertiesList extends Component {
     this.setState({ expanded: !this.state.expanded });
   };
 
+  isSavegamePropertyDefined(propertyName) {
+    return !isNullOrUndefined(this.props.savegame) && typeof this.props.savegame[propertyName] !== 'undefined';
+  }
+
   render () {
     return (
       <div>
@@ -717,12 +673,12 @@ class ReadOnlyPropertiesList extends Component {
               }}
             >
               {Object.keys(this.readOnlyProperties).map(propertyName =>
-                this.props.isSavegamePropertyDefined(propertyName) &&
+                this.isSavegamePropertyDefined(propertyName) &&
                   <Grid item key={propertyName} xs={2}>
                     <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
                   </Grid>
               )}
-              {this.props.isSavegamePropertyDefined('enabledDLC') &&
+              {this.isSavegamePropertyDefined('enabledDLC') &&
                 <Grid item xs={12}>
                   <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
                 </Grid>
@@ -742,6 +698,8 @@ class VictoryTypes extends Component {
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
 
     this.victoryTypeProperties = {
+      'timeVictory': 'Time victory',
+      'maxTurns': 'Max turns',
       'scienceVictory': 'Science victory',
       'dominationVictory': 'Domination victory',
       'culturalVictory': 'Cultural victory',
@@ -775,39 +733,23 @@ class VictoryTypes extends Component {
               padding: '10px 20px',
             }}
           >
-            {this.props.isSavegamePropertyDefined('timeVictory') &&
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.props.savegame.timeVictory}
-                    onClick={this.handleCheckboxClick}
-                    value="timeVictory"
-                  />
-                }
-                label="Time victory"
-              />
-            }
-            {this.props.isSavegamePropertyDefined('maxTurns') &&
-              <Civ5PropertyNumberTextField
-                disabled={!this.props.savegame.timeVictory}
-                label="Max turns"
-                onPropertyChanged={this.props.onPropertyChanged}
-                propertyName="maxTurns"
-                value={this.props.savegame.maxTurns}
-              />
-            }
             {Object.keys(this.victoryTypeProperties).map(propertyName =>
-              this.props.isSavegamePropertyDefined(propertyName) &&
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.props.savegame[propertyName]}
-                      onClick={this.handleCheckboxClick}
-                      value={propertyName}
-                    />
-                  }
+              propertyName === 'maxTurns' ?
+                <PropertyNumberTextField
+                  disabled={!this.props.savegame.timeVictory}
                   key={propertyName}
                   label={this.victoryTypeProperties[propertyName]}
+                  name={propertyName}
+                  onPropertyChanged={this.props.onPropertyChanged}
+                  value={this.props.savegame[propertyName]}
+                />
+              :
+                <PropertyCheckbox
+                  checked={this.props.savegame[propertyName]}
+                  key={propertyName}
+                  label={this.victoryTypeProperties[propertyName]}
+                  onPropertyChanged={this.props.onPropertyChanged}
+                  value={propertyName}
                 />
             )}
           </FormGroup>
