@@ -5,7 +5,7 @@ import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import createTypography from 'material-ui/styles/typography';
-import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import { FormGroup } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -14,7 +14,7 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import PropertyCheckbox from './components/PropertyCheckbox';
 import PropertyNumberTextField from './components/PropertyNumberTextField';
-import Radio, { RadioGroup } from 'material-ui/Radio';
+import PropertyRadioGroup from './components/PropertyRadioGroup';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import Toolbar from 'material-ui/Toolbar';
@@ -525,18 +525,14 @@ class MultiplayerOptions extends Component {
       'privateGame': 'Private game',
       'turnTimerEnabled': 'Turn timer',
       'turnTimerLength': '',
+      'turnMode': 'Turn mode',
     }
 
     if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
       delete this.multiplayerOptions.pitboss;
       delete this.multiplayerOptions.privateGame;
+      delete this.multiplayerOptions.turnMode;
     }
-
-    this.handleRadioGroupChange = this.handleRadioGroupChange.bind(this);
-  }
-
-  handleRadioGroupChange(event) {
-    this.props.onPropertyChanged(event.target.name, event.target.value);
   }
 
   render() {
@@ -557,47 +553,41 @@ class MultiplayerOptions extends Component {
               padding: '10px 20px',
             }}
           >
-            {Object.keys(this.multiplayerOptions).map(propertyName =>
-              propertyName === 'turnTimerLength' ?
-                <PropertyNumberTextField
-                  disabled={!this.props.savegame.turnTimerEnabled}
-                  label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
-                  key={propertyName}
-                  name={propertyName}
-                  onPropertyChanged={this.props.onPropertyChanged}
-                  value={this.props.savegame[propertyName]}
-                />
-              :
-                <PropertyCheckbox
-                  checked={this.props.savegame[propertyName]}
-                  key={propertyName}
-                  label={this.multiplayerOptions[propertyName]}
-                  onPropertyChanged={this.props.onPropertyChanged}
-                  value={propertyName}
-                />
-            )}
-            {this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI &&
-              <div>
-                <Typography type="body1"
-                  style={{
-                    paddingTop: '12px',
-                  }}>
-                  Turn mode
-                </Typography>
-                <RadioGroup
-                  name="turnMode"
-                  onChange={this.handleRadioGroupChange}
-                  selectedValue={this.props.savegame.turnMode}
-                  style={{
-                    padding: '0 12px',
-                  }}
-                >
-                  <FormControlLabel value={Civ5Save.TURN_MODES.HYBRID} control={<Radio />} label={Civ5Save.TURN_MODES.HYBRID} />
-                  <FormControlLabel value={Civ5Save.TURN_MODES.SEQUENTIAL} control={<Radio />} label={Civ5Save.TURN_MODES.SEQUENTIAL} />
-                  <FormControlLabel value={Civ5Save.TURN_MODES.SIMULTANEOUS} control={<Radio />} label={Civ5Save.TURN_MODES.SIMULTANEOUS} />
-                </RadioGroup>
-              </div>
-            }
+            {Object.keys(this.multiplayerOptions).map(propertyName => {
+              if (propertyName === 'turnTimerLength') {
+                return (
+                  <PropertyNumberTextField
+                    disabled={!this.props.savegame.turnTimerEnabled}
+                    label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
+                    key={propertyName}
+                    name={propertyName}
+                    onPropertyChanged={this.props.onPropertyChanged}
+                    value={this.props.savegame[propertyName]}
+                  />
+                )
+              } else if (propertyName === 'turnMode') {
+                return (
+                  <PropertyRadioGroup
+                    label={this.multiplayerOptions[propertyName]}
+                    key={propertyName}
+                    name={propertyName}
+                    onPropertyChanged={this.props.onPropertyChanged}
+                    selectedValue={this.props.savegame[propertyName]}
+                    values={Object.values(Civ5Save.TURN_MODES)}
+                  />
+                )
+              } else {
+                return (
+                  <PropertyCheckbox
+                    checked={this.props.savegame[propertyName]}
+                    key={propertyName}
+                    label={this.multiplayerOptions[propertyName]}
+                    onPropertyChanged={this.props.onPropertyChanged}
+                    value={propertyName}
+                  />
+                )
+              }
+            })}
           </FormGroup>
         </Paper>
       </div>
@@ -695,8 +685,6 @@ class VictoryTypes extends Component {
   constructor(props) {
     super(props);
 
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-
     this.victoryTypeProperties = {
       'timeVictory': 'Time victory',
       'maxTurns': 'Max turns',
@@ -704,14 +692,6 @@ class VictoryTypes extends Component {
       'dominationVictory': 'Domination victory',
       'culturalVictory': 'Cultural victory',
       'diplomaticVictory': 'Diplomatic victory',
-    }
-  }
-
-  handleCheckboxClick(event) {
-    this.props.onPropertyChanged(event.target.value, event.target.checked);
-
-    if (event.target.value === 'timeVictory' && event.target.checked === false) {
-      this.props.onPropertyChanged('maxTurns', 0);
     }
   }
 
