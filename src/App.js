@@ -5,16 +5,13 @@ import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import createTypography from 'material-ui/styles/typography';
-import { FormGroup } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
-import PropertyCheckbox from './components/PropertyCheckbox';
-import PropertyNumberTextField from './components/PropertyNumberTextField';
-import PropertyRadioGroup from './components/PropertyRadioGroup';
+import PropertyList from './components/PropertyList';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import Toolbar from 'material-ui/Toolbar';
@@ -225,12 +222,12 @@ class App extends Component {
                     style={{
                       display: 'flex',
                     }}>
-                    <AdvancedOptions
+                    <AdvancedProperties
                       classes={this.props.classes}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
                     />
-                    <HiddenOptions
+                    <HiddenProperties
                       classes={this.props.classes}
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
@@ -247,7 +244,7 @@ class App extends Component {
                       />
                       {(this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
                         this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
-                        <MultiplayerOptions
+                        <MultiplayerProperties
                           classes={this.props.classes}
                           onPropertyChanged={this.handlePropertyChange}
                           savegame={this.state.savegame}
@@ -408,11 +405,11 @@ class FileUploader extends Component {
   }
 }
 
-class AdvancedOptions extends Component {
+class AdvancedProperties extends Component {
   constructor(props) {
     super(props);
 
-    this.advancedOptions = {
+    this.advancedProperties = {
       'policySaving': 'Allow policy saving',
       'promotionSaving': 'Allow promotion saving',
       'completeKills': 'Complete kills',
@@ -425,49 +422,28 @@ class AdvancedOptions extends Component {
     }
 
     if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
-      delete this.advancedOptions.newRandomSeed;
+      delete this.advancedProperties.newRandomSeed;
     }
   }
 
-  render () {
+  render() {
     return (
-      <div>
-        <Typography type="subheading"
-          style={{
-            margin: '20px 0 0 20px',
-          }}>
-          Advanced options
-        </Typography>
-        <Paper
-          className={this.props.classes.paper}
-        >
-          <FormGroup
-            style={{
-              fontSize: darkTheme.typography.fontSize,
-              padding: '10px 20px',
-            }}
-          >
-            {Object.keys(this.advancedOptions).map(propertyName =>
-              <PropertyCheckbox
-                checked={this.props.savegame[propertyName]}
-                key={propertyName}
-                label={this.advancedOptions[propertyName]}
-                onPropertyChanged={this.props.onPropertyChanged}
-                value={propertyName}
-              />
-            )}
-          </FormGroup>
-        </Paper>
-      </div>
+      <PropertyList
+        classes={this.props.classes}
+        label="Advanced options"
+        onPropertyChanged={this.props.onPropertyChanged}
+        savegame={this.props.savegame}
+        saveProperties={this.advancedProperties}
+      />
     );
   }
 }
 
-class HiddenOptions extends Component {
+class HiddenProperties extends Component {
   constructor(props) {
     super(props);
 
-    this.hiddenOptions = {
+    this.hiddenProperties = {
       'alwaysPeace': 'Always peace',
       'alwaysWar': 'Always war',
       'lockMods': 'Lock mods',
@@ -482,45 +458,24 @@ class HiddenOptions extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
-      <div>
-        <Typography type="subheading"
-          style={{
-            margin: '20px 0 0 20px',
-          }}>
-          Hidden options
-        </Typography>
-        <Paper
-          className={this.props.classes.paper}
-        >
-          <FormGroup
-            style={{
-              fontSize: darkTheme.typography.fontSize,
-              padding: '10px 20px',
-            }}
-          >
-            {Object.keys(this.hiddenOptions).map(propertyName =>
-              <PropertyCheckbox
-                checked={this.props.savegame[propertyName]}
-                key={propertyName}
-                label={this.hiddenOptions[propertyName]}
-                onPropertyChanged={this.props.onPropertyChanged}
-                value={propertyName}
-              />
-            )}
-          </FormGroup>
-        </Paper>
-      </div>
+      <PropertyList
+        classes={this.props.classes}
+        label="Hidden options"
+        onPropertyChanged={this.props.onPropertyChanged}
+        savegame={this.props.savegame}
+        saveProperties={this.hiddenProperties}
+      />
     );
   }
 }
 
-class MultiplayerOptions extends Component {
+class MultiplayerProperties extends Component {
   constructor(props) {
     super(props);
 
-    this.multiplayerOptions = {
+    this.multiplayerProperties = {
       'pitboss': 'Pitboss',
       'privateGame': 'Private game',
       'turnTimerEnabled': 'Turn timer',
@@ -529,68 +484,21 @@ class MultiplayerOptions extends Component {
     }
 
     if (this.props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
-      delete this.multiplayerOptions.pitboss;
-      delete this.multiplayerOptions.privateGame;
-      delete this.multiplayerOptions.turnMode;
+      delete this.multiplayerProperties.pitboss;
+      delete this.multiplayerProperties.privateGame;
+      delete this.multiplayerProperties.turnMode;
     }
   }
 
   render() {
     return (
-      <div>
-        <Typography type="subheading"
-          style={{
-            margin: '20px 0 0 20px',
-          }}>
-          Multiplayer options
-        </Typography>
-        <Paper
-          className={this.props.classes.paper}
-        >
-          <FormGroup
-            style={{
-              fontSize: darkTheme.typography.fontSize,
-              padding: '10px 20px',
-            }}
-          >
-            {Object.keys(this.multiplayerOptions).map(propertyName => {
-              if (propertyName === 'turnTimerLength') {
-                return (
-                  <PropertyNumberTextField
-                    disabled={!this.props.savegame.turnTimerEnabled}
-                    label={this.props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
-                    key={propertyName}
-                    name={propertyName}
-                    onPropertyChanged={this.props.onPropertyChanged}
-                    value={this.props.savegame[propertyName]}
-                  />
-                )
-              } else if (propertyName === 'turnMode') {
-                return (
-                  <PropertyRadioGroup
-                    label={this.multiplayerOptions[propertyName]}
-                    key={propertyName}
-                    name={propertyName}
-                    onPropertyChanged={this.props.onPropertyChanged}
-                    selectedValue={this.props.savegame[propertyName]}
-                    values={Object.values(Civ5Save.TURN_MODES)}
-                  />
-                )
-              } else {
-                return (
-                  <PropertyCheckbox
-                    checked={this.props.savegame[propertyName]}
-                    key={propertyName}
-                    label={this.multiplayerOptions[propertyName]}
-                    onPropertyChanged={this.props.onPropertyChanged}
-                    value={propertyName}
-                  />
-                )
-              }
-            })}
-          </FormGroup>
-        </Paper>
-      </div>
+      <PropertyList
+        classes={this.props.classes}
+        label="Multiplayer options"
+        onPropertyChanged={this.props.onPropertyChanged}
+        savegame={this.props.savegame}
+        saveProperties={this.multiplayerProperties}
+      />
     );
   }
 }
@@ -697,44 +605,13 @@ class VictoryTypes extends Component {
 
   render() {
     return (
-      <div>
-        <Typography type="subheading"
-          style={{
-            margin: '20px 0 0 20px',
-          }}>
-          Victory types
-        </Typography>
-        <Paper
-          className={this.props.classes.paper}
-        >
-          <FormGroup
-            style={{
-              fontSize: darkTheme.typography.fontSize,
-              padding: '10px 20px',
-            }}
-          >
-            {Object.keys(this.victoryTypeProperties).map(propertyName =>
-              propertyName === 'maxTurns' ?
-                <PropertyNumberTextField
-                  disabled={!this.props.savegame.timeVictory}
-                  key={propertyName}
-                  label={this.victoryTypeProperties[propertyName]}
-                  name={propertyName}
-                  onPropertyChanged={this.props.onPropertyChanged}
-                  value={this.props.savegame[propertyName]}
-                />
-              :
-                <PropertyCheckbox
-                  checked={this.props.savegame[propertyName]}
-                  key={propertyName}
-                  label={this.victoryTypeProperties[propertyName]}
-                  onPropertyChanged={this.props.onPropertyChanged}
-                  value={propertyName}
-                />
-            )}
-          </FormGroup>
-        </Paper>
-      </div>
+      <PropertyList
+        classes={this.props.classes}
+        label="Victory types"
+        onPropertyChanged={this.props.onPropertyChanged}
+        savegame={this.props.savegame}
+        saveProperties={this.victoryTypeProperties}
+      />
     );
   }
 }

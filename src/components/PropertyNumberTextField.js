@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class Civ5PropertyNumberTextField extends Component {
+export default class PropertyNumberTextField extends Component {
   constructor(props) {
     super(props);
 

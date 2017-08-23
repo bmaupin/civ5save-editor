@@ -3,7 +3,7 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import React, { Component } from 'react';
 import Typography from 'material-ui/Typography';
 
-export default class Civ5PropertyCheckbox extends Component {
+export default class PropertyRadioGroup extends Component {
   constructor(props) {
     super(props);
 
@@ -34,7 +34,7 @@ export default class Civ5PropertyCheckbox extends Component {
           }}
         >
           {this.props.values.map((value, i) =>
-            <FormControlLabel value={value} control={<Radio />} label={value} />
+            <FormControlLabel control={<Radio />} key={value} label={value} value={value} />
           )}
         </RadioGroup>
       </div>

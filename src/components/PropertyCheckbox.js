@@ -2,7 +2,7 @@ import Checkbox from 'material-ui/Checkbox';
 import { FormControlLabel } from 'material-ui/Form';
 import React, { Component } from 'react';
 
-export default class Civ5PropertyCheckbox extends Component {
+export default class PropertyCheckbox extends Component {
   constructor(props) {
     super(props);
 
