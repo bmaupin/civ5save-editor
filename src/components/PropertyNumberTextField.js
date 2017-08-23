@@ -21,7 +21,7 @@ export default class Civ5PropertyNumberTextField extends Component {
 
   handleTextFieldBlur(event) {
     // Forcing the input to a number will convert an empty string to 0
-    this.props.onPropertyChanged(this.props.propertyName, Number(event.target.value));
+    this.props.onPropertyChanged(event.target.name, Number(event.target.value));
   }
 
   handleTextFieldChange(event) {
@@ -42,6 +42,7 @@ export default class Civ5PropertyNumberTextField extends Component {
             min: 0,
           }}
           label={this.props.label}
+          name={this.props.name}
           onBlur={this.handleTextFieldBlur}
           onChange={this.handleTextFieldChange}
           // Setting min and max messes up the width
