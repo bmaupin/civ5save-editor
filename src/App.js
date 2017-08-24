@@ -1,26 +1,29 @@
+import AdvancedProperties from './components/AdvancedProperties';
 import AppBar from 'material-ui/AppBar';
 import { CircularProgress } from 'material-ui/Progress';
 import Civ5Save from 'civ5save';
-import Collapse from 'material-ui/transitions/Collapse';
 import { createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import createTypography from 'material-ui/styles/typography';
-import Grid from 'material-ui/Grid';
+import DemoButton from './components/DemoButton';
+import DownloadFileButton from './components/DownloadFileButton';
+import HiddenProperties from './components/HiddenProperties';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { MuiThemeProvider } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import PropertyList from './components/PropertyList';
+import MultiplayerProperties from './components/MultiplayerProperties';
 import React, { Component } from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { createStyleSheet, withStyles } from 'material-ui/styles';
+import ReadOnlyProperties from './components/ReadOnlyProperties';
+import UploadFileButton from './components/UploadFileButton';
+import VictoryTypeProperties from './components/VictoryTypeProperties';
 import './App.css';
 
 const APP_TITLE = 'Civilization V save editor';
-const DEMO_SAVE_FILE = 'demo/demo.Civ5Save';
 const REPO_URL = 'https://github.com/bmaupin/react-civ5save';
 
 const darkTheme = (() => {
@@ -152,12 +155,12 @@ class App extends Component {
                   padding: '8px 0 0',
                 }}
               >
-                <FileUploader
+                <UploadFileButton
                   changeSavegameState={this.changeSavegameState}
                   onError={this.handleError}
                   onNewSavegame={this.handleNewSavegame}
                 />
-                <FileDownloader
+                <DownloadFileButton
                   disabled={this.state.savegameState !== App.SAVEGAME_STATES.LOADED}
                   savegame={this.state.savegame}
                   savegameFilename={this.state.savegameFilename}
@@ -221,9 +224,10 @@ class App extends Component {
                     maxWidth: '900px',
                   }}
                 >
-                  <ReadOnlyPropertiesList
+                  <ReadOnlyProperties
                     classes={this.props.classes}
                     savegame={this.state.savegame}
+                    theme={darkTheme}
                   />
                   <div
                     style={{
@@ -246,7 +250,7 @@ class App extends Component {
                         flexFlow: 'column nowrap',
                       }}
                     >
-                      <VictoryTypes
+                      <VictoryTypeProperties
                         classes={this.props.classes}
                         onPropertyChanged={this.handlePropertyChange}
                         savegame={this.state.savegame}
@@ -295,303 +299,4 @@ App.SAVEGAME_STATES = {
   NOT_LOADED: 'Not loaded',
 };
 
-function DemoButton(props) {
-  function getFileBlob(url) {
-    return new Promise(function (resolve, reject) {
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', url);
-      xhr.responseType = 'blob';
-      xhr.addEventListener('load', function() {
-        resolve(xhr.response);
-      });
-      xhr.addEventListener('error', function() {
-        reject(xhr.statusText);
-      });
-      xhr.send();
-    });
-  }
-
-  async function handleClick(event) {
-    props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
-    let demoSaveFile = await getFileBlob(DEMO_SAVE_FILE);
-    let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
-    props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
-  }
-
-  return (
-    <ListItem
-      button
-      onClick={handleClick}
-    >
-      <ListItemIcon>
-        <Icon>play_circle_outline</Icon>
-      </ListItemIcon>
-      <ListItemText primary="Demo" />
-    </ListItem>
-  );
-}
-
-class FileDownloader extends Component {
-  constructor(props) {
-    super(props);
-
-    // Store URL in a variable so we can revoke it when we're done with it
-    // https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL#Notes
-    this.downloadURL = null;
-  }
-
-  createDownloadURL() {
-    if (!isNullOrUndefined(this.props.savegame)) {
-      if (!isNullOrUndefined(this.downloadURL)) {
-        console.log('createDownloadURL: URL.revokeObjectURL');
-        URL.revokeObjectURL(this.downloadURL);
-      }
-
-      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toFile(this.props.savegameFilename));
-      return this.downloadURL;
-    }
-  }
-
-  render() {
-    return (
-      <ListItem
-        button
-        component="a"
-        disabled={this.props.disabled}
-        download={this.props.savegameFilename}
-        href={this.createDownloadURL()}
-      >
-        <ListItemIcon>
-          <Icon>file_download</Icon>
-        </ListItemIcon>
-        <ListItemText primary="Download" />
-      </ListItem>
-    );
-  }
-}
-
-class FileUploader extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  async handleChange(event) {
-    if (this.refs.fileUploader.files.length > 0) {
-      this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
-      let newSaveFile = this.refs.fileUploader.files[0];
-      try {
-        let newSavegame = await Civ5Save.fromFile(newSaveFile);
-        this.props.onNewSavegame(newSavegame, newSaveFile.name);
-      } catch (e) {
-        this.props.onError(e);
-      }
-    }
-  }
-
-  handleClick(event) {
-    this.refs.fileUploader.click();
-  }
-
-  render() {
-    return (
-      <ListItem button onClick={this.handleClick}>
-        <ListItemIcon>
-          <Icon>folder_open</Icon>
-        </ListItemIcon>
-        <ListItemText primary="Open save file" />
-        <input type="file" ref="fileUploader" onChange={this.handleChange} style={{display: "none"}} />
-      </ListItem>
-    );
-  }
-}
-
-function AdvancedProperties(props) {
-  let advancedProperties = {
-    'policySaving': 'Allow policy saving',
-    'promotionSaving': 'Allow promotion saving',
-    'completeKills': 'Complete kills',
-    'newRandomSeed': 'New random seed',
-    'noBarbarians': 'No barbarians',
-    'noCityRazing': 'No city razing',
-    'oneCityChallenge': 'One-city challenge',
-    'ragingBarbarians': 'Raging barbarians',
-    'randomPersonalities': 'Random personalities',
-  }
-
-  if (props.savegame.gameMode === Civ5Save.GAME_MODES.MULTI) {
-    delete advancedProperties.newRandomSeed;
-  }
-
-  return (
-    <PropertyList
-      classes={props.classes}
-      label="Advanced options"
-      onPropertyChanged={props.onPropertyChanged}
-      savegame={props.savegame}
-      saveProperties={advancedProperties}
-    />
-  );
-}
-
-function HiddenProperties(props) {
-  return (
-    <PropertyList
-      classes={props.classes}
-      label="Hidden options"
-      onPropertyChanged={props.onPropertyChanged}
-      savegame={props.savegame}
-      saveProperties={{
-        'alwaysPeace': 'Always peace',
-        'alwaysWar': 'Always war',
-        'lockMods': 'Lock mods',
-        'noChangingWarPeace': 'No changing war or peace',
-        'noCultureOverviewUI': 'No culture overview UI',
-        'noEspionage': 'No espionage',
-        'noHappiness': 'No happiness',
-        'noPolicies': 'No policies',
-        'noReligion': 'No religion',
-        'noScience': 'No science',
-        'noWorldCongress': 'No world congress',
-      }}
-    />
-  );
-}
-
-function MultiplayerProperties(props) {
-  let multiplayerProperties = {
-    'pitboss': 'Pitboss',
-    'privateGame': 'Private game',
-    'turnTimerEnabled': 'Turn timer',
-    'turnTimerLength': '',
-    'turnMode': 'Turn mode',
-  }
-
-  if (props.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) {
-    delete multiplayerProperties.pitboss;
-    delete multiplayerProperties.privateGame;
-    delete multiplayerProperties.turnMode;
-  }
-
-  return (
-    <PropertyList
-      classes={props.classes}
-      label="Multiplayer options"
-      onPropertyChanged={props.onPropertyChanged}
-      savegame={props.savegame}
-      saveProperties={multiplayerProperties}
-    />
-  );
-}
-
-class ReadOnlyPropertiesList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      expanded: false,
-    };
-
-    this.readOnlyProperties = {
-      'gameBuild': 'Game build',
-      'gameVersion': 'Game version',
-      'gameMode': 'Game mode',
-      'currentTurn': 'Current turn',
-      'player1Civilization': 'Player 1 civilization',
-      'difficulty': 'Difficulty',
-      'startingEra': 'Starting era',
-      'currentEra': 'Current era',
-      'gamePace': 'Game pace',
-      'mapSize': 'Map size',
-      'mapFile': 'Map',
-    }
-  }
-
-  handleExpandClick = () => {
-    this.setState({ expanded: !this.state.expanded });
-  };
-
-  isSavegamePropertyDefined(propertyName) {
-    return !isNullOrUndefined(this.props.savegame) && typeof this.props.savegame[propertyName] !== 'undefined';
-  }
-
-  render () {
-    return (
-      <div>
-        <IconButton
-          aria-expanded={this.state.expanded}
-          aria-label="Game details"
-          onClick={this.handleExpandClick}
-          style={{
-            fontSize: darkTheme.typography.fontSize,
-            height: 'initial',
-            margin: '14px 0 0 20px',
-            width: 'initial',
-          }}
-        >
-          <Typography type="subheading">
-            Game details
-          </Typography>
-          <Icon
-            style={{
-              margin: '6px',
-              transform: (this.state.expanded && 'rotate(180deg)'),
-              transition: darkTheme.transitions.create('transform', {
-                duration: darkTheme.transitions.duration.shortest,
-              })
-            }}
-          >expand_more</Icon>
-        </IconButton>
-        <Collapse in={this.state.expanded} transitionDuration="auto">
-          <Paper className={this.props.classes.paper}>
-            <Grid container
-              style={{
-                padding: '10px 20px',
-              }}
-            >
-              {Object.keys(this.readOnlyProperties).map(propertyName =>
-                this.isSavegamePropertyDefined(propertyName) &&
-                  <Grid item key={propertyName} xs={2}>
-                    <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
-                  </Grid>
-              )}
-              {this.isSavegamePropertyDefined('enabledDLC') &&
-                <Grid item xs={12}>
-                  <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
-                </Grid>
-              }
-            </Grid>
-          </Paper>
-        </Collapse>
-      </div>
-    );
-  }
-}
-
-function VictoryTypes(props) {
-  return (
-    <PropertyList
-      classes={props.classes}
-      label="Victory types"
-      onPropertyChanged={props.onPropertyChanged}
-      savegame={props.savegame}
-      saveProperties={{
-        'timeVictory': 'Time victory',
-        'maxTurns': 'Max turns',
-        'scienceVictory': 'Science victory',
-        'dominationVictory': 'Domination victory',
-        'culturalVictory': 'Cultural victory',
-        'diplomaticVictory': 'Diplomatic victory',
-      }}
-    />
-  );
-}
-
 export default withStyles(styles)(App);
-
-// https://stackoverflow.com/a/416327/399105
-function isNullOrUndefined(variable) {
-  return typeof variable === 'undefined' || variable === null;
-}
