@@ -16,9 +16,7 @@ export default function PropertyList(props) {
         }}>
         {props.label}
       </Typography>
-      <Paper
-        className={props.classes.paper}
-      >
+      <Paper className={props.classes.paper}>
         <FormGroup
           style={{
             padding: '10px 20px',
