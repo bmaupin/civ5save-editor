@@ -26,6 +26,8 @@ export default class UploadFileButton extends Component {
   }
 
   handleClick(event) {
+    // Fix bug where onChange isn't triggered if the same file is selected (https://stackoverflow.com/a/12102992/399105)
+    this.refs.fileUploader.value = null;
     this.refs.fileUploader.click();
   }
 

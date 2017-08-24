@@ -66,11 +66,7 @@ export default class ReadOnlyProperties extends Component {
         </IconButton>
         <Collapse in={this.state.expanded} transitionDuration="auto">
           <Paper className={this.props.classes.paper}>
-            <Grid container
-              style={{
-                padding: '10px 20px',
-              }}
-            >
+            <Grid className={this.props.classes.propertyList} container>
               {Object.keys(this.readOnlyProperties).map(propertyName =>
                 this.isSavegamePropertyDefined(propertyName) &&
                   <Grid item key={propertyName} xs={2}>
