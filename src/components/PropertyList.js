@@ -17,11 +17,7 @@ export default function PropertyList(props) {
         {props.label}
       </Typography>
       <Paper className={props.classes.paper}>
-        <FormGroup
-          style={{
-            padding: '10px 20px',
-          }}
-        >
+        <FormGroup className={props.classes.propertyList}>
           {Object.keys(props.saveProperties).map(propertyName => {
             let disabled = null;
             if (propertyName === 'maxTurns') {
@@ -43,6 +39,7 @@ export default function PropertyList(props) {
             } else if (propertyName === 'turnMode') {
               return (
                 <PropertyRadioGroup
+                  classes={props.classes}
                   label={props.saveProperties[propertyName]}
                   key={propertyName}
                   name={propertyName}
@@ -55,6 +52,7 @@ export default function PropertyList(props) {
               return (
                 <PropertyCheckbox
                   checked={props.savegame[propertyName]}
+                  classes={props.classes}
                   key={propertyName}
                   label={props.saveProperties[propertyName]}
                   onPropertyChanged={props.onPropertyChanged}

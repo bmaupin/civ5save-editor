@@ -34,7 +34,7 @@ export default class PropertyRadioGroup extends Component {
           }}
         >
           {this.props.values.map((value, i) =>
-            <FormControlLabel control={<Radio />} key={value} label={value} value={value} />
+            <FormControlLabel className={this.props.classes.radioButton} control={<Radio />} key={value} label={value} value={value} />
           )}
         </RadioGroup>
       </div>

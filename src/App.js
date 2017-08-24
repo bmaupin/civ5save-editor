@@ -49,9 +49,18 @@ const darkTheme = (() => {
 })();
 
 const styles = createStyleSheet(theme => ({
+  checkbox: {
+    height: '36px',
+  },
   paper: {
     backgroundColor: darkTheme.palette.background.contentFrame,
     margin: '10px 20px 20px 20px',
+  },
+  propertyList: {
+    padding: '10px 20px',
+  },
+  radioButton: {
+    height: '36px',
   },
 }));
 

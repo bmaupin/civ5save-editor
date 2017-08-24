@@ -23,6 +23,7 @@ export default class PropertyCheckbox extends Component {
         control={
           <Checkbox
             checked={this.props.checked}
+            className={this.props.classes.checkbox}
             onClick={this.handleCheckboxClick}
             value={this.props.value}
           />
