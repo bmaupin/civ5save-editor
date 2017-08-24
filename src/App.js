@@ -97,18 +97,24 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider className="App" theme={darkTheme}
+      <MuiThemeProvider
+        className="App"
         style={{
           height: '100%',
-        }}>
-        <div style={{
-          height: '100%',
-        }}>
+        }}
+        theme={darkTheme}
+      >
+        <div
+          style={{
+            height: '100%',
+          }}
+        >
           <AppBar
              style={{
               // Make sure app bar doesn't cover up page content
               position: 'relative',
-            }}>
+            }}
+          >
             <Toolbar>
               <Typography
                 // This makes sure the button is aligned on the right
@@ -213,7 +219,8 @@ class App extends Component {
                   style={{
                     // TODO: adjust this as necessary
                     maxWidth: '900px',
-                  }}>
+                  }}
+                >
                   <ReadOnlyPropertiesList
                     classes={this.props.classes}
                     savegame={this.state.savegame}
@@ -221,7 +228,8 @@ class App extends Component {
                   <div
                     style={{
                       display: 'flex',
-                    }}>
+                    }}
+                  >
                     <AdvancedProperties
                       classes={this.props.classes}
                       onPropertyChanged={this.handlePropertyChange}
@@ -236,7 +244,8 @@ class App extends Component {
                       style={{
                         display: 'flex',
                         flexFlow: 'column nowrap',
-                      }}>
+                      }}
+                    >
                       <VictoryTypes
                         classes={this.props.classes}
                         onPropertyChanged={this.handlePropertyChange}
@@ -255,10 +264,11 @@ class App extends Component {
                 </div>
               }
               {this.state.savegameState === App.SAVEGAME_STATES.ERROR &&
-                <Typography type="subheading"
+                <Typography
                   style={{
                     margin: '20px',
                   }}
+                  type="subheading"
                 >
                   <p><Icon style={{ fontSize: '50px' }}>error_outline</Icon></p>
                   <p>The following error was encountered when trying to open your save file:</p>
@@ -285,14 +295,8 @@ App.SAVEGAME_STATES = {
   NOT_LOADED: 'Not loaded',
 };
 
-class DemoButton extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  getFileBlob(url) {
+function DemoButton(props) {
+  function getFileBlob(url) {
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
       xhr.open('GET', url);
@@ -307,25 +311,24 @@ class DemoButton extends Component {
     });
   }
 
-  async handleClick(event) {
-    this.props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
-    let demoSaveFile = await this.getFileBlob(DEMO_SAVE_FILE);
+  async function handleClick(event) {
+    props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
+    let demoSaveFile = await getFileBlob(DEMO_SAVE_FILE);
     let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
-    this.props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
+    props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
   }
 
-  render() {
-    return (
-      <ListItem button
-        onClick={this.handleClick}
-      >
-        <ListItemIcon>
-          <Icon>play_circle_outline</Icon>
-        </ListItemIcon>
-        <ListItemText primary="Demo" />
-      </ListItem>
-    );
-  }
+  return (
+    <ListItem
+      button
+      onClick={handleClick}
+    >
+      <ListItemIcon>
+        <Icon>play_circle_outline</Icon>
+      </ListItemIcon>
+      <ListItemText primary="Demo" />
+    </ListItem>
+  );
 }
 
 class FileDownloader extends Component {
@@ -340,6 +343,7 @@ class FileDownloader extends Component {
   createDownloadURL() {
     if (!isNullOrUndefined(this.props.savegame)) {
       if (!isNullOrUndefined(this.downloadURL)) {
+        console.log('createDownloadURL: URL.revokeObjectURL');
         URL.revokeObjectURL(this.downloadURL);
       }
 
@@ -350,7 +354,8 @@ class FileDownloader extends Component {
 
   render() {
     return (
-      <ListItem button
+      <ListItem
+        button
         component="a"
         disabled={this.props.disabled}
         download={this.props.savegameFilename}
@@ -392,9 +397,7 @@ class FileUploader extends Component {
 
   render() {
     return (
-      <ListItem button
-        onClick={this.handleClick}
-      >
+      <ListItem button onClick={this.handleClick}>
         <ListItemIcon>
           <Icon>folder_open</Icon>
         </ListItemIcon>
@@ -541,10 +544,8 @@ class ReadOnlyPropertiesList extends Component {
             }}
           >expand_more</Icon>
         </IconButton>
-        <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-          <Paper
-            className={this.props.classes.paper}
-          >
+        <Collapse in={this.state.expanded} transitionDuration="auto">
+          <Paper className={this.props.classes.paper}>
             <Grid container
               style={{
                 padding: '10px 20px',
