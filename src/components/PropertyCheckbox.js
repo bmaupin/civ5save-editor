@@ -20,6 +20,7 @@ export default class PropertyCheckbox extends Component {
   render() {
     return (
       <FormControlLabel
+        className={this.props.classes.formControlLabel}
         control={
           <Checkbox
             checked={this.props.checked}

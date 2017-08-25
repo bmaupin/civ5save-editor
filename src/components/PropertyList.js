@@ -9,30 +9,28 @@ import Typography from 'material-ui/Typography';
 
 export default function PropertyList(props) {
   return (
-    <div>
-      <Typography
-        style={{
-          margin: '20px 0 0 20px',
-        }}
-        type="subheading"
-      >
+    <div className={props.classes.propertyList}>
+      <Typography className={props.classes.propertyListHeading} type="subheading">
         {props.label}
       </Typography>
       <Paper className={props.classes.paper}>
-        <FormGroup className={props.classes.propertyList}>
+        <FormGroup className={props.classes.propertyListBody}>
           {Object.keys(props.saveProperties).map(propertyName => {
-            let disabled = null;
+            let textFieldDisabled = null;
+            let textFieldLabel = null;
             if (propertyName === 'maxTurns') {
-              disabled = !props.savegame.timeVictory;
+              textFieldDisabled = !props.savegame.timeVictory;
+              textFieldLabel = props.saveProperties[propertyName];
             } else if (propertyName === 'turnTimerLength') {
-              disabled = !props.savegame.turnTimerEnabled;
+              textFieldDisabled = !props.savegame.turnTimerEnabled;
+              textFieldLabel = (props.savegame.pitboss === true ? 'Hours' : 'Seconds');
             }
             if (propertyName === 'maxTurns' || propertyName ===  'turnTimerLength') {
               return (
                 <PropertyNumberTextField
                   classes={props.classes}
-                  disabled={disabled}
-                  label={props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
+                  disabled={textFieldDisabled}
+                  label={textFieldLabel}
                   key={propertyName}
                   name={propertyName}
                   onPropertyChanged={props.onPropertyChanged}

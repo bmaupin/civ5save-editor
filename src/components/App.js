@@ -51,12 +51,20 @@ const styles = createStyleSheet(theme => ({
   checkbox: {
     height: '36px',
   },
+  formControlLabel: {
+    marginRight: '0',
+  },
   paper: {
     backgroundColor: darkTheme.palette.background.contentFrame,
-    margin: '10px 20px 20px 20px',
   },
   propertyList: {
+    margin: '20px 0 4px 24px',
+  },
+  propertyListBody: {
+    margin: '10px 0 0 0',
     padding: '10px 20px',
+  },
+  propertyListHeading: {
   },
   radioButton: {
     height: '36px',
@@ -190,6 +198,7 @@ class App extends Component {
             <div
               style={{
                 flex: '1',
+                padding: '0 24px 20px 0',
               }}
             >
               {this.state.savegameState === App.SAVEGAME_STATES.NOT_LOADED &&
@@ -227,12 +236,7 @@ class App extends Component {
                 </div>
               }
               {this.state.savegameState === App.SAVEGAME_STATES.LOADED &&
-                <div
-                  style={{
-                    // TODO: adjust this as necessary
-                    maxWidth: '900px',
-                  }}
-                >
+                <div>
                   <ReadOnlyProperties
                     classes={this.props.classes}
                     savegame={this.state.savegame}
@@ -241,8 +245,14 @@ class App extends Component {
                   <div
                     style={{
                       display: 'flex',
+                      flexFlow: 'row wrap',
                     }}
                   >
+                    <VictoryTypeProperties
+                      classes={this.props.classes}
+                      onPropertyChanged={this.handlePropertyChange}
+                      savegame={this.state.savegame}
+                    />
                     <AdvancedProperties
                       classes={this.props.classes}
                       onPropertyChanged={this.handlePropertyChange}
@@ -253,26 +263,14 @@ class App extends Component {
                       onPropertyChanged={this.handlePropertyChange}
                       savegame={this.state.savegame}
                     />
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexFlow: 'column nowrap',
-                      }}
-                    >
-                      <VictoryTypeProperties
+                    {(this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
+                      this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
+                      <MultiplayerProperties
                         classes={this.props.classes}
                         onPropertyChanged={this.handlePropertyChange}
                         savegame={this.state.savegame}
                       />
-                      {(this.state.savegame.gameMode === Civ5Save.GAME_MODES.MULTI ||
-                        this.state.savegame.gameMode === Civ5Save.GAME_MODES.HOTSEAT) &&
-                        <MultiplayerProperties
-                          classes={this.props.classes}
-                          onPropertyChanged={this.handlePropertyChange}
-                          savegame={this.state.savegame}
-                        />
-                      }
-                    </div>
+                    }
                   </div>
                 </div>
               }
