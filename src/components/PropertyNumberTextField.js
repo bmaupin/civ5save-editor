@@ -30,11 +30,8 @@ export default class PropertyNumberTextField extends Component {
 
   render() {
     return (
-      <div
-        style={{
-          padding: '0 12px',
-        }}
-      >
+      // The parent div is required so that styling is applied to the textfield label as well
+      <div className={this.props.classes.subProperty}>
         <TextField
           disabled={this.props.disabled}
           inputProps={{
@@ -46,9 +43,7 @@ export default class PropertyNumberTextField extends Component {
           onBlur={this.handleTextFieldBlur}
           onChange={this.handleTextFieldChange}
           // Setting min and max messes up the width
-          style={{
-            width: '100%',
-          }}
+          style={{width: '100%'}}
           type="number"
           value={this.state.value}
         />

@@ -19,19 +19,17 @@ export default class PropertyRadioGroup extends Component {
       <div>
         <Typography
           style={{
-            paddingTop: '12px',
+            padding: '12px 0 0 0',
           }}
           type="body1"
         >
           {this.props.label}
         </Typography>
         <RadioGroup
+          className={this.props.classes.subProperty}
           name={this.props.name}
           onChange={this.handleRadioGroupChange}
           selectedValue={this.props.selectedValue}
-          style={{
-            padding: '0 12px',
-          }}
         >
           {this.props.values.map((value, i) =>
             <FormControlLabel className={this.props.classes.radioButton} control={<Radio />} key={value} label={value} value={value} />
