@@ -39,15 +39,21 @@ export default class ReadOnlyProperties extends Component {
 
   render () {
     return (
-      <div>
+      <div
+        className={this.props.classes.propertyList}
+        style={{
+          // TODO: adjust this as necessary
+          maxWidth: '900px',
+        }}
+      >
         <IconButton
           aria-expanded={this.state.expanded}
           aria-label="Game details"
+          className={this.props.classes.propertyListHeading}
           onClick={this.handleExpandClick}
           style={{
             fontSize: this.props.theme.typography.fontSize,
             height: 'initial',
-            margin: '14px 0 0 20px',
             width: 'initial',
           }}
         >
@@ -56,7 +62,7 @@ export default class ReadOnlyProperties extends Component {
           </Typography>
           <Icon
             style={{
-              margin: '6px',
+              margin: '0 6px',
               transform: (this.state.expanded && 'rotate(180deg)'),
               transition: this.props.theme.transitions.create('transform', {
                 duration: this.props.theme.transitions.duration.shortest,
@@ -66,7 +72,14 @@ export default class ReadOnlyProperties extends Component {
         </IconButton>
         <Collapse in={this.state.expanded} transitionDuration="auto">
           <Paper className={this.props.classes.paper}>
-            <Grid className={this.props.classes.propertyList} container>
+            <Grid
+              className={this.props.classes.propertyListBody}
+              container
+              style={{
+                paddingTop: '16px',
+                paddingBottom: '16px',
+              }}
+            >
               {Object.keys(this.readOnlyProperties).map(propertyName =>
                 this.isSavegamePropertyDefined(propertyName) &&
                   <Grid item key={propertyName} xs={2}>

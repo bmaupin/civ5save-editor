@@ -7,7 +7,7 @@ export default function MultiplayerProperties(props) {
     'pitboss': 'Pitboss',
     'privateGame': 'Private game',
     'turnTimerEnabled': 'Turn timer',
-    'turnTimerLength': '',
+    'turnTimerLength': 'Seconds',
     'turnMode': 'Turn mode',
   }
 
