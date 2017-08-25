@@ -10,10 +10,12 @@ import Typography from 'material-ui/Typography';
 export default function PropertyList(props) {
   return (
     <div>
-      <Typography type="subheading"
+      <Typography
         style={{
           margin: '20px 0 0 20px',
-        }}>
+        }}
+        type="subheading"
+      >
         {props.label}
       </Typography>
       <Paper className={props.classes.paper}>
@@ -28,6 +30,7 @@ export default function PropertyList(props) {
             if (propertyName === 'maxTurns' || propertyName ===  'turnTimerLength') {
               return (
                 <PropertyNumberTextField
+                  classes={props.classes}
                   disabled={disabled}
                   label={props.savegame.pitboss === true ? 'Hours' : 'Seconds'}
                   key={propertyName}

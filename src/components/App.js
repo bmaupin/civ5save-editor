@@ -61,6 +61,9 @@ const styles = createStyleSheet(theme => ({
   radioButton: {
     height: '36px',
   },
+  subProperty: {
+    padding: '0 0 0 12px',
+  }
 }));
 
 class App extends Component {
@@ -158,9 +161,8 @@ class App extends Component {
               <List
                 style={{
                   backgroundColor: darkTheme.palette.background.paper,
-                  // TODO: we've subtracted the padding height to prevent overflow. Is there a more elegant way to do this?
-                  height: 'calc(100% - 8px)',
-                  padding: '8px 0 0',
+                  boxSizing: 'border-box',
+                  height: '100%',
                 }}
               >
                 <UploadFileButton
@@ -194,7 +196,6 @@ class App extends Component {
                 <List
                   style={{
                     opacity: '0.8',
-                    padding: '8px',
                   }}
                 >
                   <ListItem>
