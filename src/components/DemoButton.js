@@ -1,4 +1,4 @@
-import App from '../App';
+import App from './App';
 import Civ5Save from 'civ5save';
 import Icon from 'material-ui/Icon';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
