@@ -23,7 +23,7 @@ import UploadFileButton from './UploadFileButton';
 import VictoryTypeProperties from './VictoryTypeProperties';
 
 const APP_TITLE = 'Civilization V save editor';
-const REPO_URL = 'https://github.com/bmaupin/react-civ5save';
+const REPO_URL = 'https://github.com/bmaupin/react-civ5save-editor';
 
 const darkTheme = (() => {
   const palette = createPalette({
@@ -63,8 +63,6 @@ const styles = createStyleSheet(theme => ({
   propertyListBody: {
     margin: '10px 0 0 0',
     padding: '10px 20px',
-  },
-  propertyListHeading: {
   },
   radioButton: {
     height: '36px',
@@ -217,7 +215,7 @@ class App extends Component {
                     <ListItemText primary="← If you have any problems, you can report a bug here" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="← Click here to see what the editor looks like without having to open a save file" />
+                    <ListItemText primary="← Click here to try out the editor with a sample save file" />
                   </ListItem>
                 </List>
               }
