@@ -1,10 +1,5 @@
 {
+  "manifest_version": 2,
   "name": "Civilization V save editor",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
+  "version": "0.1.0"
 }
