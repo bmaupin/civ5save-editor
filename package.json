@@ -9,6 +9,7 @@
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10"
   },
+  "homepage": "https://bmaupin.github.io/react-civ5save-editor/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
