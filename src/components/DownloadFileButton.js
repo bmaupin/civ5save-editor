@@ -17,7 +17,7 @@ export default class DownloadFileButton extends Component {
         URL.revokeObjectURL(this.downloadURL);
       }
 
-      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toFile(this.props.savegameFilename));
+      this.downloadURL = window.URL.createObjectURL(this.props.savegame.toBlob());
       return this.downloadURL;
     }
   }
