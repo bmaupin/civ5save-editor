@@ -9,6 +9,7 @@ export default function AdvancedProperties(props) {
     'completeKills': 'Complete kills',
     'newRandomSeed': 'New random seed',
     'noBarbarians': 'No barbarians',
+    'noEspionage': 'No espionage',
     'noCityRazing': 'No city razing',
     'oneCityChallenge': 'One-city challenge',
     'ragingBarbarians': 'Raging barbarians',
