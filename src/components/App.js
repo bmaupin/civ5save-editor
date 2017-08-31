@@ -189,6 +189,7 @@ class App extends Component {
                 </ListItem>
                 <DemoButton
                   changeSavegameState={this.changeSavegameState}
+                  onError={this.handleError}
                   onNewSavegame={this.handleNewSavegame}
                 />
               </List>
@@ -280,13 +281,13 @@ class App extends Component {
                   type="subheading"
                 >
                   <p><Icon style={{ fontSize: '50px' }}>error_outline</Icon></p>
-                  <p>The following error was encountered when trying to open your save file:</p>
+                  <p>The following error was encountered when trying to open the save file:</p>
                   <p>
-                  <code>
+                  <pre>
                     {this.state.error.message}
-                  </code>
+                  </pre>
                   </p>
-                  <p>Please try another file or use the link on the left to report a bug.</p>
+                  <p dangerouslySetInnerHTML={{__html: this.state.error.customMessage}} />
                 </Typography>
               }
             </div>
