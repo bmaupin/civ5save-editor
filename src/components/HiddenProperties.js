@@ -14,7 +14,6 @@ export default function HiddenProperties(props) {
         'lockMods': 'Lock mods',
         'noChangingWarPeace': 'No changing war or peace',
         'noCultureOverviewUI': 'No culture overview UI',
-        'noEspionage': 'No espionage',
         'noHappiness': 'No happiness',
         'noPolicies': 'No policies',
         'noReligion': 'No religion',
