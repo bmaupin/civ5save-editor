@@ -25,8 +25,13 @@ export default function DemoButton(props) {
   async function handleClick(event) {
     props.changeSavegameState(App.SAVEGAME_STATES.LOADING);
     let demoSaveFile = await getFileBlob(DEMO_SAVE_FILE);
-    let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
-    props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
+    try {
+      let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
+      props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
+    } catch (e) {
+      e.customMessage = 'Your web browser may be outdated. Please see here for more information: <a href="http://outdatedbrowser.com">outdatedbrowser.com</a>';
+      props.onError(e);
+    }
   }
 
   return (

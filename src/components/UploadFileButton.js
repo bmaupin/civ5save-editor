@@ -20,6 +20,7 @@ export default class UploadFileButton extends Component {
         let newSavegame = await Civ5Save.fromFile(newSaveFile);
         this.props.onNewSavegame(newSavegame, newSaveFile.name);
       } catch (e) {
+        e.customMessage = 'Please try another file or use the link on the left to report a bug.'
         this.props.onError(e);
       }
     }
