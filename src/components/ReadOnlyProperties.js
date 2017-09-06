@@ -1,12 +1,18 @@
 import Collapse from 'material-ui/transitions/Collapse';
-import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import React, { Component } from 'react';
+import { createStyleSheet, withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-export default class ReadOnlyProperties extends Component {
+const styles = createStyleSheet(theme => ({
+  readOnlyPropertiesItem: {
+    padding: '0 16px 16px 0',
+  },
+}));
+
+class ReadOnlyProperties extends Component {
   constructor(props) {
     super(props);
 
@@ -84,29 +90,40 @@ export default class ReadOnlyProperties extends Component {
         </IconButton>
         <Collapse in={this.state.expanded} transitionDuration="auto">
           <Paper className={this.props.classes.paper}>
-            <Grid
+            <div
               className={this.props.classes.propertyListBody}
-              container
               style={{
-                paddingTop: '16px',
+                display: 'flex',
+                flexFlow: 'row wrap',
+                // Offset the padding of the inside elements
+                marginBottom: '-16px',
+                marginRight: '-16px',
+                // More closely match the padding of the other property lists
                 paddingBottom: '16px',
+                paddingTop: '16px',
               }}
             >
               {Object.keys(this.readOnlyProperties).map(propertyName =>
                 this.isSavegamePropertyDefined(propertyName) &&
-                  <Grid item key={propertyName} xs={2}>
+                  <div
+                    className={this.props.classes.readOnlyPropertiesItem}
+                    key={propertyName}
+                    style={{
+                      flex: '0 1 130px',
+                    }}
+                  >
                     <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
-                  </Grid>
+                  </div>
               )}
               {this.isSavegamePropertyDefined('enabledDLC') &&
-                <Grid item xs={12}>
+                <div className={this.props.classes.readOnlyPropertiesItem}>
                   <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
-                </Grid>
+                </div>
               }
-                <Grid item xs={12}>
-                  <Typography type='body1'>Players: <em>{this.getPlayerList()}</em></Typography>
-                </Grid>
-            </Grid>
+              <div className={this.props.classes.readOnlyPropertiesItem}>
+                <Typography type='body1'>Players: <em>{this.getPlayerList()}</em></Typography>
+              </div>
+            </div>
           </Paper>
         </Collapse>
       </div>
@@ -117,3 +134,5 @@ export default class ReadOnlyProperties extends Component {
 function isNullOrUndefined(variable) {
   return typeof variable === 'undefined' || variable === null;
 }
+
+export default withStyles(styles)(ReadOnlyProperties);
