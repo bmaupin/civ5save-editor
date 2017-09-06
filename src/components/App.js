@@ -282,11 +282,9 @@ class App extends Component {
                 >
                   <p><Icon style={{ fontSize: '50px' }}>error_outline</Icon></p>
                   <p>The following error was encountered when trying to open the save file:</p>
-                  <p>
                   <pre>
                     {this.state.error.message}
                   </pre>
-                  </p>
                   <p dangerouslySetInnerHTML={{__html: this.state.error.customMessage}} />
                 </Typography>
               }
