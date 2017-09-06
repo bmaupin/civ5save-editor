@@ -1314,9 +1314,9 @@ circular-json@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
 
-civ5save@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.0.12.tgz#762f64c961ff98030f108b899691ec5e95cabab1"
+civ5save@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.0.16.tgz#903be724d58ad5740d4053538e7c2a64fb4c0632"
   dependencies:
     babel-runtime "^6.26.0"
 

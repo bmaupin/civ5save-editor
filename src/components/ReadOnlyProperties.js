@@ -19,7 +19,6 @@ export default class ReadOnlyProperties extends Component {
       'gameVersion': 'Game version',
       'gameMode': 'Game mode',
       'currentTurn': 'Current turn',
-      'player1Civilization': 'Player 1 civilization',
       'difficulty': 'Difficulty',
       'startingEra': 'Starting era',
       'currentEra': 'Current era',
@@ -27,6 +26,19 @@ export default class ReadOnlyProperties extends Component {
       'mapSize': 'Map size',
       'mapFile': 'Map',
     }
+  }
+
+  getPlayerList() {
+    let playerListArray = this.props.savegame.players.map(player => {
+      if (typeof player.civilization !== 'undefined') {
+        return `${player.civilization} (${player.status})`;
+      } else {
+        return `(${player.status})`;
+      }
+    });
+    let playerList = playerListArray.join(', ');
+
+    return playerList;
   }
 
   handleExpandClick = () => {
@@ -91,6 +103,9 @@ export default class ReadOnlyProperties extends Component {
                   <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
                 </Grid>
               }
+                <Grid item xs={12}>
+                  <Typography type='body1'>Players: <em>{this.getPlayerList()}</em></Typography>
+                </Grid>
             </Grid>
           </Paper>
         </Collapse>
