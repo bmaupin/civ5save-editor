@@ -88,7 +88,15 @@ class ReadOnlyProperties extends Component {
             }}
           >expand_more</Icon>
         </IconButton>
-        <Collapse in={this.state.expanded} transitionDuration="auto">
+        <Collapse
+          in={this.state.expanded}
+          style={{
+            // Make sure box shadow isn't cut off by overflow: hidden (https://stackoverflow.com/a/33949075/399105)
+            margin: '-5px',
+            padding: '5px',
+          }}
+          transitionDuration="auto"
+        >
           <Paper className={this.props.classes.paper}>
             <div
               className={this.props.classes.propertyListBody}
@@ -96,10 +104,9 @@ class ReadOnlyProperties extends Component {
                 display: 'flex',
                 flexFlow: 'row wrap',
                 // Offset the padding of the inside elements
-                marginBottom: '-16px',
-                marginRight: '-16px',
+                paddingBottom: '0px',
+                paddingRight: '0px',
                 // More closely match the padding of the other property lists
-                paddingBottom: '16px',
                 paddingTop: '16px',
               }}
             >
