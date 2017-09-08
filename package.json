@@ -19,6 +19,7 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "gh-pages": "^1.0.0"
   }
 }
