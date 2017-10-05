@@ -1,8 +1,8 @@
 import Checkbox from 'material-ui/Checkbox';
 import { FormControlLabel } from 'material-ui/Form';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class PropertyCheckbox extends Component {
+export default class PropertyCheckbox extends PureComponent {
   constructor(props) {
     super(props);
 

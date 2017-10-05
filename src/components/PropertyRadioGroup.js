@@ -1,9 +1,10 @@
 import { FormControlLabel } from 'material-ui/Form';
 import Radio, { RadioGroup } from 'material-ui/Radio';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Typography from 'material-ui/Typography';
 
-export default class PropertyRadioGroup extends Component {
+// XXX: If this.props.values needs to change, this class cannot be a PureComponent
+export default class PropertyRadioGroup extends PureComponent {
   constructor(props) {
     super(props);
 
