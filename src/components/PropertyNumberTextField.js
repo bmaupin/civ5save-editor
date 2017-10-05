@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class PropertyNumberTextField extends Component {
+export default class PropertyNumberTextField extends PureComponent {
   constructor(props) {
     super(props);
 

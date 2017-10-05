@@ -2,9 +2,9 @@ import App from './App';
 import Civ5Save from 'civ5save';
 import Icon from 'material-ui/Icon';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class UploadFileButton extends Component {
+export default class UploadFileButton extends PureComponent {
   constructor(props) {
     super(props);
 
