@@ -23,7 +23,7 @@ import UploadFileButton from './UploadFileButton';
 import VictoryTypeProperties from './VictoryTypeProperties';
 
 const APP_TITLE = 'Civilization V save editor';
-const REPO_URL = 'https://github.com/bmaupin/react-civ5save-editor';
+const REPO_URL = 'https://github.com/bmaupin/civ5save-editor';
 
 const darkTheme = (() => {
   const palette = createPalette({
