@@ -122,14 +122,18 @@ class ReadOnlyProperties extends Component {
                     <Typography type='body1'>{this.readOnlyProperties[propertyName]}:<br /><em>{this.props.savegame[propertyName]}</em></Typography>
                   </div>
               )}
-              {this.isSavegamePropertyDefined('enabledDLC') &&
-                <div className={this.props.classes.readOnlyPropertiesItem}>
-                  <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
-                </div>
-              }
               <div className={this.props.classes.readOnlyPropertiesItem}>
                 <Typography type='body1'>Players: <em>{this.getPlayerList()}</em></Typography>
               </div>
+              {this.isSavegamePropertyDefined('enabledDLC') &&
+                <div
+                className={this.props.classes.readOnlyPropertiesItem}
+                style={{
+                  width: '100%',
+                }}>
+                  <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
+                </div>
+              }
             </div>
           </Paper>
         </Collapse>
