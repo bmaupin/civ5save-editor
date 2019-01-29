@@ -134,6 +134,15 @@ class ReadOnlyProperties extends Component {
                   <Typography type='body1'>DLC: <em>{this.props.savegame.enabledDLC.join(', ') || 'None'}</em></Typography>
                 </div>
               }
+              {this.isSavegamePropertyDefined('enabledMods') &&
+                <div
+                  className={this.props.classes.readOnlyPropertiesItem}
+                  style={{
+                    width: '100%',
+                  }}>
+                  <Typography type='body1'>Mods: <em>{this.props.savegame.enabledMods.join(', ') || 'None'}</em></Typography>
+                </div>
+              }
             </div>
           </Paper>
         </Collapse>
