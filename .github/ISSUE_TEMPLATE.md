@@ -14,4 +14,5 @@
 
 
 <!--- Lastly, please attach any relevant save files either directly to this
-      issue or using your preferred file sharing service -->
+      issue (they will need to be zipped or GitHub won't accept them) or using
+      your preferred file sharing service -->
