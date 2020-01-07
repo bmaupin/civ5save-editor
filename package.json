@@ -1,9 +1,9 @@
 {
   "name": "civ5save-editor",
-  "version": "0.1.0",
+  "version": "0.3.2",
   "private": true,
   "dependencies": {
-    "civ5save": "^0.3.1",
+    "civ5save": "^0.3.2",
     "material-ui": "next",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

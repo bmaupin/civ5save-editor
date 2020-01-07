@@ -1520,10 +1520,10 @@ circular-json@^0.3.1:
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
   integrity sha1-vos2rvzN6LPKeqLWr8B6NyQsDS0=
 
-civ5save@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.3.1.tgz#52762001d595d91be2208981893c064e54d90349"
-  integrity sha512-iPFTietg9FHe235vEVey4SX+I0RB/Bt+dut+4LXqUibRS0ZnptEuQ8M1IUjTgGBdCLwOUd2+AtTsZLCyRxLKfg==
+civ5save@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.3.2.tgz#59da6a8113a653e04bf87d0dbed6f804e41d7649"
+  integrity sha512-G3+fNwZ8okN14AxiPf2AuqdqNWf1ZOIlx2DQuXKibzxOCVyGH1BkFcLrCga8V2Fdsh4AbQdT/JXx+/jQUFn5Vg==
   dependencies:
     babel-runtime "^6.26.0"
 
