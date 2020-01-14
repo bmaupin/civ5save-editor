@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-  # Node v0.10 is installed by default, but >= v4 is required for yarn. "node" will install the latest stable version
-  # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Travis-CI-supports-yarn
+  # "node" will install the latest stable version
+  # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/
   - "node"
 after_script:
   # Send test coverage data to coveralls.io

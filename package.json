@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "civ5save": "^1.0.0",
-    "material-ui": "next",
+    "material-ui": "^1.0.0-beta.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10"
@@ -15,7 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject",
-    "predeploy": "yarn build",
+    "predeploy": "npm build",
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
