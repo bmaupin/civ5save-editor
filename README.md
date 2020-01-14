@@ -6,7 +6,6 @@ Built using:
 - [React](https://reactjs.org/)
 - [Material-UI](http://www.material-ui.com)
 
-Works in recent versions of [modern browsers](http://outdatedbrowser.com).
+Works in recent versions of modern browsers such as [Firefox](https://www.mozilla.org/firefox/).
 
-Browser testing provided by  
-<a href="https://browserstack.com"><img src="https://bstacksupport.zendesk.com/attachments/token/q3lgvdc6t3gMJfqDUFkqsMgrP/?name=Logo-01.svg" alt="BrowserStack" width=200 /></a>
+For more information, please see [https://github.com/bmaupin/js-civ5save#readme](https://github.com/bmaupin/js-civ5save#readme)
