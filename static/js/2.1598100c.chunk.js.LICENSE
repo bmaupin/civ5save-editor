@@ -1,0 +1,107 @@
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/*!*************************!*\
+        !*** ./src/Civ5Save.js ***!
+        \*************************/
+
+/*! exports provided: default, InvalidSignatureError, ParseError */
+
+/*!*************************************!*\
+        !*** ./src/Civ5SaveBoolProperty.js ***!
+        \*************************************/
+
+/*! exports provided: default */
+
+/*!***************************************!*\
+        !*** ./src/Civ5SaveDLCStringArray.js ***!
+        \***************************************/
+
+/*!*********************************!*\
+        !*** ./src/Civ5SaveDataView.js ***!
+        \*********************************/
+
+/*!*********************************!*\
+        !*** ./src/Civ5SaveIntArray.js ***!
+        \*********************************/
+
+/*!************************************!*\
+        !*** ./src/Civ5SaveIntProperty.js ***!
+        \************************************/
+
+/*!****************************************!*\
+        !*** ./src/Civ5SaveModsStringArray.js ***!
+        \****************************************/
+
+/*!*********************************!*\
+        !*** ./src/Civ5SaveProperty.js ***!
+        \*********************************/
+
+/*!********************************************!*\
+        !*** ./src/Civ5SavePropertyDefinitions.js ***!
+        \********************************************/
+
+/*!****************************************!*\
+        !*** ./src/Civ5SavePropertyFactory.js ***!
+        \****************************************/
+
+/*!************************************!*\
+        !*** ./src/Civ5SaveStringArray.js ***!
+        \************************************/
+
+/*!***************************************!*\
+        !*** ./src/Civ5SaveStringProperty.js ***!
+        \***************************************/
+
+/*!****************************************!*\
+        !*** ./src/Civ5SaveStringToBoolMap.js ***!
+        \****************************************/
+
+/*!********************************!*\
+        !*** ./src/ExtendableError.js ***!
+        \********************************/
+
+/**
+ * Checks if an event is supported in the current execution environment.
+ *
+ * NOTE: This will not work correctly for non-generic events such as `change`,
+ * `reset`, `load`, `error`, and `select`.
+ *
+ * Borrows from Modernizr.
+ *
+ * @param {string} eventNameSuffix Event name, e.g. "click".
+ * @param {?boolean} capture Check if the capture phase is supported.
+ * @return {boolean} True if the event is supported.
+ * @internal
+ * @license Modernizr 3.0.0pre (Custom Build) | MIT
+ */
+
+/*!
+ * Programatically add the following
+ */
+
+/** @license React v16.12.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * CSS Vendor prefix detection and property feature testing.
+ *
+ * @copyright Oleg Slobodskoi 2015
+ * @website https://github.com/jsstyles/css-vendor
+ * @license MIT
+ */
