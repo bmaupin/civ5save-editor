@@ -1058,14 +1058,6 @@ babel-runtime@6.23.0, babel-runtime@^6.18.0, babel-runtime@^6.20.0, babel-runtim
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-runtime@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
-  integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.0"
-
 babel-template@^6.16.0, babel-template@^6.24.1, babel-template@^6.25.0:
   version "6.25.0"
   resolved "https://registry.yarnpkg.com/babel-template/-/babel-template-6.25.0.tgz#665241166b7c2aa4c619d71e192969552b10c071"
@@ -1520,12 +1512,10 @@ circular-json@^0.3.1:
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
   integrity sha1-vos2rvzN6LPKeqLWr8B6NyQsDS0=
 
-civ5save@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-0.3.2.tgz#59da6a8113a653e04bf87d0dbed6f804e41d7649"
-  integrity sha512-G3+fNwZ8okN14AxiPf2AuqdqNWf1ZOIlx2DQuXKibzxOCVyGH1BkFcLrCga8V2Fdsh4AbQdT/JXx+/jQUFn5Vg==
-  dependencies:
-    babel-runtime "^6.26.0"
+civ5save@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/civ5save/-/civ5save-1.0.0.tgz#00c5fc67858f01e5e88e9422ffe22c8c94ff9f4c"
+  integrity sha512-IBdPYSJeBUJSX4WDGMivhPw6UXD9Hygs9TWJGkJRPBD2x8wSiSG8mlEf9/b9a+sxYUmH7KdVmFdCC/uqVQBz0w==
 
 clap@^1.0.9:
   version "1.2.0"
@@ -6234,11 +6224,6 @@ regenerator-runtime@^0.10.0:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
   integrity sha1-M2w+/BIgrc7dosn6tntaeVWjNlg=
-
-regenerator-runtime@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.0.tgz#7e54fe5b5ccd5d6624ea6255c3473be090b802e1"
-  integrity sha512-/aA0kLeRb5N9K0d4fw7ooEbI+xDe+DKD499EQqygGqeS8N3xto15p09uY2xj7ixP81sNPXvRLnAQIqdVStgb1A==
 
 regenerator-transform@0.9.11:
   version "0.9.11"
