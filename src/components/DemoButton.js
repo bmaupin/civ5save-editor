@@ -29,7 +29,7 @@ export default function DemoButton(props) {
       let demoSavegame = await Civ5Save.fromFile(demoSaveFile);
       props.onNewSavegame(demoSavegame, DEMO_SAVE_FILE.split('/').pop());
     } catch (e) {
-      e.customMessage = 'Your web browser may be outdated. Please see here for more information: <a href="http://outdatedbrowser.com">outdatedbrowser.com</a>';
+      e.customMessage = 'Your web browser may be outdated. Please upgrade your browser or install a modern browser such as <a href="https://www.mozilla.org/firefox/">Firefox</a>.';
       props.onError(e);
     }
   }
