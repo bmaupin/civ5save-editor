@@ -8,6 +8,11 @@ html {
   height: 100%;
 }
 
+a {
+  /* The default link colour in Material-UI is unreadable with the dark theme */
+  color: inherit;
+}
+
 #root {
   height: 100%;
 }
