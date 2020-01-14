@@ -2,12 +2,24 @@
   "name": "civ5save-editor",
   "version": "0.3.2",
   "private": true,
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "civ5save": "^1.0.0",
     "material-ui": "^1.0.0-beta.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-scripts": "^3.3.0"
   },
   "homepage": "https://bmaupin.github.io/civ5save-editor/",
   "scripts": {
@@ -19,7 +31,7 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.9",
     "gh-pages": "^1.0.0"
   }
 }
