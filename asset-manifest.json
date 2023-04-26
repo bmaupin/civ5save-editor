@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/civ5save-editor/static/css/main.d8e25dda.chunk.css",
-    "main.js": "/civ5save-editor/static/js/main.2da8e7cd.chunk.js",
-    "main.js.map": "/civ5save-editor/static/js/main.2da8e7cd.chunk.js.map",
+    "main.js": "/civ5save-editor/static/js/main.b2f9f249.chunk.js",
+    "main.js.map": "/civ5save-editor/static/js/main.b2f9f249.chunk.js.map",
     "runtime-main.js": "/civ5save-editor/static/js/runtime-main.ced1608b.js",
     "runtime-main.js.map": "/civ5save-editor/static/js/runtime-main.ced1608b.js.map",
-    "static/js/2.1598100c.chunk.js": "/civ5save-editor/static/js/2.1598100c.chunk.js",
-    "static/js/2.1598100c.chunk.js.map": "/civ5save-editor/static/js/2.1598100c.chunk.js.map",
+    "static/js/2.8a0b0847.chunk.js": "/civ5save-editor/static/js/2.8a0b0847.chunk.js",
+    "static/js/2.8a0b0847.chunk.js.map": "/civ5save-editor/static/js/2.8a0b0847.chunk.js.map",
     "index.html": "/civ5save-editor/index.html",
-    "precache-manifest.40146abcc7d38651932edb1bf9af96ce.js": "/civ5save-editor/precache-manifest.40146abcc7d38651932edb1bf9af96ce.js",
+    "precache-manifest.c8d5af5f94161fd1fdc6b8c9b1fd71f9.js": "/civ5save-editor/precache-manifest.c8d5af5f94161fd1fdc6b8c9b1fd71f9.js",
     "service-worker.js": "/civ5save-editor/service-worker.js",
     "static/css/main.d8e25dda.chunk.css.map": "/civ5save-editor/static/css/main.d8e25dda.chunk.css.map",
-    "static/js/2.1598100c.chunk.js.LICENSE": "/civ5save-editor/static/js/2.1598100c.chunk.js.LICENSE"
+    "static/js/2.8a0b0847.chunk.js.LICENSE": "/civ5save-editor/static/js/2.8a0b0847.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.ced1608b.js",
-    "static/js/2.1598100c.chunk.js",
+    "static/js/2.8a0b0847.chunk.js",
     "static/css/main.d8e25dda.chunk.css",
-    "static/js/main.2da8e7cd.chunk.js"
+    "static/js/main.b2f9f249.chunk.js"
   ]
 }

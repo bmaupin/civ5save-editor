@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5c76d5c6482df6b56573db39d641bad0",
+    "revision": "3e31f8a522346c0d42a89639c13d2580",
     "url": "/civ5save-editor/index.html"
   },
   {
-    "revision": "71fe910b4ca96576f8ab",
+    "revision": "6b856876f8157a516616",
     "url": "/civ5save-editor/static/css/main.d8e25dda.chunk.css"
   },
   {
-    "revision": "fa50aa8a4be9130c3711",
-    "url": "/civ5save-editor/static/js/2.1598100c.chunk.js"
+    "revision": "a6acc57baff0d40d1ac4",
+    "url": "/civ5save-editor/static/js/2.8a0b0847.chunk.js"
   },
   {
     "revision": "5d4a2b4e2c089bcbd2034ada878a5baf",
-    "url": "/civ5save-editor/static/js/2.1598100c.chunk.js.LICENSE"
+    "url": "/civ5save-editor/static/js/2.8a0b0847.chunk.js.LICENSE"
   },
   {
-    "revision": "71fe910b4ca96576f8ab",
-    "url": "/civ5save-editor/static/js/main.2da8e7cd.chunk.js"
+    "revision": "6b856876f8157a516616",
+    "url": "/civ5save-editor/static/js/main.b2f9f249.chunk.js"
   },
   {
     "revision": "0f70e5eeb2be5bddf6ee",
